@@ -1,0 +1,93 @@
+# Big-O Time Complexities
+
+## [Map](https://hexdocs.pm/elixir/1.17/Map.html)
+
+| Operation | Time Complexity |
+| --------- | ---  |
+| Access    | `O(log n)` |
+| Search    | `O(log n)` |
+| Insertion | `O(log n)` |
+| Deletion  | `O(log n)` |
+
+**Caveats**:
+
+- Maps are unordered, allow any key type, but disallow duplicate keys
+
+## [List](https://hexdocs.pm/elixir/1.17/List.html)
+
+| Operation | Time Complexity                       |
+| --------- | ------------------------------------- |
+| Access    | `O(n)`                                  |
+| Search    | `O(n)`                                  |
+| Insertion | `O(1)` for prepending, otherwise `O(n)`   |
+| Deletion  | `O(1)` if first element, otherwise `O(n)` |
+
+**Caveats**
+
+- Lists are not arrays as in other languages, but single-linked lists
+
+## [Keyword (List)](https://hexdocs.pm/elixir/1.17/Keyword.html#module-duplicate-keys-and-ordering)
+
+A `Keyword (list)` has the same time complexities as `List`.
+Every entry in a `Keyword (list)` is a tuple with the first element being the `key` and the second element the `value`.
+
+```elixir
+keyword = [{:a, 1}, {:b, 2}]
+```
+
+**Caveats**
+
+- A keyword list **does not** guarantee order.
+- A keyword list may have duplicate keys, but duplicates are often ignored by functions like `Keyword.get/3` (returns the first match) and are even removed by e.g. `Keyword.put/3` and `Keyword.delete/2`.
+```elixir
+iex> Keyword.get([{:a, 1}, {:a, 2}], :a)
+1
+
+iex> Keyword.put([{:a, 1}, {:a, 2}], :a, 3)
+[a: 3]
+
+iex> Keyword.delete([{:a, 1}, {:a, 2}], :a)
+[]
+```
+
+## [Tuple](https://hexdocs.pm/elixir/1.17/Tuple.html)
+
+| Operation | Time Complexity |
+| --------- | --------------- |
+| Access    | `O(1)`            |
+| Search    | `O(n)`            |
+| Insertion | `O(n)`            |
+| Deletion  | `O(n)`            |
+
+**Caveats**
+
+- Tuples are better for reading, whereas Lists are better for traversals
+- Avoid using tuples as a collection
+  - (i.e. avoid `Tuple.append/2`, `Tuple.insert_at/3`, or `Tuple.delete_at/2`)
+
+## [(erlang) array](https://www.erlang.org/doc/man/array.html)
+
+| Operation | Time Complexity                                                                          |
+| --------- | ---------------------------------------------------------------------------------------- |
+| Access    | `O(log n)` [[7]](https://erlang.org/pipermail/erlang-questions/2015-September/086001.html) |
+| Search    | `O(log n)`                                                                                 |
+| Insertion | `O(log n)`                                                                                 |
+| Deletion  | `O(log n)`                                                                                 |
+
+**Caveats**
+
+- An array is a trie of small tuples, with a smaller memory overhead to Lists
+- Deletion is actually a replace with the default value and creates sparse arrays
+  - For real deletion, use [sparse_to_list/1](https://www.erlang.org/doc/man/array.html#sparse_to_list-1), which has `O(n)` complexity
+
+## [MapSet](https://hexdocs.pm/elixir/1.17/MapSet.html#content)
+
+Same complexities as 'Map'
+
+### References
+
+- [Partial overview of complexities](https://stackoverflow.com/questions/46385207/closest-thing-to-arrays-in-elixir/46476693#46476693)
+- [Discussion of :array](https://elixirforum.com/t/arrays/8850)
+- [Does Elixir have persistent data structures?](https://stackoverflow.com/questions/30203227/does-elixir-have-persistent-data-structures-similar-to-clojure)
+- [Way to get `O(1)` access/set](https://elixirforum.com/t/way-to-get-o-1-access-set/24471/3)
+- [Sequences by sasajuric](https://www.theerlangelist.com/article/sequences)

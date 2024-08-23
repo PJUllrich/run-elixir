@@ -1,0 +1,69 @@
+# Hello World!
+
+[Elixir](https://elixir-lang.org) is a dynamic, functional programming language for building scalable and maintainable applications. It puts the FUN back into FUNctional programming 😬. This guide will walk you through its basics in less than 20 minutes! Let's get started.
+
+If you want to run the following code yourself, there are three options:
+
+1. Start an IEx REPL with `iex -S mix` and copy and paste the code into the command line.
+2. Copy and paste the code into an Elixir script file, like `script.exs`, and run `mix run script.exs`.
+3. Simply click the `Run in Livebook` button above to open this file in an interactive notebook.
+
+## Hello World
+
+Here's how you write a `Hello World` script in Elixir.
+
+```elixir
+IO.puts("Hello World!")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Hello World!
+```
+
+Easy peasy!
+
+We use `IO.puts/1` here because we print a single value. If we want to print a more complex data structure, like a list, we need to use `IO.inspect/1`. It's common to use `IO.inspect/1` over `IO.puts/1`, so we'll use it exclusively from now on.
+
+## Variable assignment
+
+Assigning a value to a variable is super simple in Elixir. You just write `my_var =` and whatever is on the right side of the `=` sign gets assigned to the variable. Here is how to assign all the different basic types to variables:
+
+```elixir
+name = "Peter" # String
+age = 21 # Integer
+age_hex = 0x15 # Integer in hexadecimal
+height = 190.47 # Float
+adult? = true # Boolean
+status = :active # Atom
+
+IO.inspect([name, age, age_hex, height, adult?, status])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+["Peter", 21, 21, 190.47, true, :active]
+```
+
+Variables are **immutable** but can be reassigned. This means that the memory holding the old value will not be overwritten; instead, new memory is allocated to hold the new value while the old value remains until garbage collected. Even if you modify a variable, it is not updated in place but copied to a new chunk of memory. This might seem wasteful, but it prevents different processes from modifying the same variable.
+
+```elixir
+age = 21
+age = 30
+IO.inspect(age)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+30
+```
+
+You can ignore assignments by prefixing the variable name with an underscore:
+
+```elixir
+_ = 30
+_result = 30 + 21
+```

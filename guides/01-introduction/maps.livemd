@@ -1,0 +1,149 @@
+# Maps
+
+Associative data structures are able to associate a key to a certain value. You might know them as dictionary, map, hash table, key-value store, etc. Elixir has two main structures: Maps and Keyword Lists. Let's first talk about Maps.
+
+A `Map` is a key-value store that can contain any value as a key.
+
+```elixir
+map = %{:hello => "World!", 21 => :age, "height" => 190.47}
+
+# If the key is an Atom, you can access its value using the dot-notation
+map.hello |> IO.inspect(label: 1)
+
+# Otherwise, you need to use the bracket-notation
+map[21] |> IO.inspect(label: 2)
+map["height"] |> IO.inspect(label: 3)
+
+# Delete one key from the map
+Map.delete(map, :hello) |> IO.inspect(label: 4)
+
+# Or delete multiple keys at once
+Map.drop(map, [:hello, 21]) |> IO.inspect(label: 5)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: "World!"
+2: :age
+3: 190.47
+4: %{21 => :age, "height" => 190.47}
+5: %{"height" => 190.47}
+```
+
+### Maps with Atom keys
+
+If your map contains only Atom keys, you can replace the arrow `=>` with a semicolon `:`
+
+```elixir
+map = %{hello: "World", age: 21, height: 190.47}
+map.age |> IO.inspect()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+21
+```
+
+The advantage of this notation is that Elixir raises an error if you try to access a key that doesn't exist:
+
+```elixir
+map = %{hello: "World", age: 21, height: 190.47}
+map.agee
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+** (KeyError) key :agee not found in: %{hello: "World", age: 21, height: 190.47}. Did you mean:
+
+      * :age
+
+```
+
+## Updating a Map
+
+There are a few ways to update a value in a map. They all have their pros and cons:
+
+```elixir
+map = %{age: 21, name: "Peter"}
+
+# This notation updates a map value:
+Map.put(map, :age, 22) |> IO.inspect(label: 1)
+# But it also adds non-existent keys, which is bad if we make a typo:
+Map.put(map, :aeg, 22) |> IO.inspect(label: 2)
+
+# This notation does not add non-existent keys,
+# but it stays silent if we make a typo.
+Map.replace(map, :aeg, 22) |> IO.inspect(label: 3)
+# This version raises an error instead:
+Map.replace!(map, :aeg, 22)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: %{name: "Peter", age: 22}
+2: %{name: "Peter", age: 21, aeg: 22}
+3: %{name: "Peter", age: 21}
+** (KeyError) key :aeg not found in: %{name: "Peter", age: 21}
+    (stdlib 6.0) :maps.update(:aeg, 22, %{name: "Peter", age: 21})
+```
+
+Lastly, there is a shorthand notation which comes in handy if you don't want to "pipe" (we'll discuss it later) your output.
+
+```elixir
+map = %{age: 21, name: "Peter"}
+
+# This shorthand notation also updates existing keys:
+%{map | age: 22, name: "Pietah"} |> IO.inspect(label: 1)
+# But it raises an error too if the key does not exist
+%{map | height: 190.47}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: %{age: 22, name: "Pietah"}
+** (KeyError) key :height not found in: %{name: "Peter", age: 21}
+    (stdlib 6.0) :maps.update(:height, 190.47, %{name: "Peter", age: 21})
+    (stdlib 6.0) erl_eval.erl:465: anonymous fn/2 in :erl_eval.expr/6
+    (stdlib 6.0) lists.erl:2146: :lists.foldl/3
+    (stdlib 6.0) erl_eval.erl:462: :erl_eval.expr/6
+    (elixir 1.17.1) src/elixir.erl:364: :elixir.eval_forms/4
+    (elixir 1.17.1) lib/module/parallel_checker.ex:112: Module.ParallelChecker.verify/1
+    lib/livebook/runtime/evaluator.ex:629: anonymous fn/3 in Livebook.Runtime.Evaluator.eval/4
+    (elixir 1.17.1) lib/code.ex:621: Code.with_diagnostics/2
+```
+
+## Caveats
+
+Map keys are not ordered and if you iterate over the elements of a map, you cannot expect that the "first" key will always be the same.
+
+```elixir
+map = %{"hello" => "World", "age" => 21, "height" => 190.47}
+Enum.map(map, fn {key, _value} -> IO.inspect(key) end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"age"
+"height"
+"hello"
+```
+
+Also, maps cannot have duplicate keys. If you define duplicate keys, the latter key will overwrite the earlier key and a warning will be shown:
+
+```elixir
+%{name: "Peter", age: 21, name: "Pietah"}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{name: "Pietah", age: 21}
+warning: key :name will be overridden in map
+└─ Library/Application Support/livebook/autosaved/2024_08_23/07_18_piwn/untitled_notebook.livemd#cell:ephnppjvminxbiag:1
+```

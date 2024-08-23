@@ -1,0 +1,84 @@
+# Lists and Tuples
+
+Elixir has two collection types: (Linked) Lists and Tuples.
+
+## Lists
+
+A `List` is defined with square brackets and can contain elements of different data types:
+
+```elixir
+details = ["Peter", 21, 190.47, true, :active]
+```
+
+Lists are not stored contiguously in memory because they are implemented as [linked lists](https://en.wikipedia.org/wiki/Linked_list). Each element is stored in memory with its value and a pointer to the next element. This structure makes traversing, updating, deleting, and prepending values slow, but appending new values fast. For more information, see the [Big-O Time Complexities]() section.
+
+You can access elements in various ways:
+
+```elixir
+details = ["Peter", 21, 190.47, true, :active]
+
+# Returns the 2nd element, because lists are 0-based.
+Enum.at(details, 1) |> IO.inspect(label: 1)
+
+# You can get the last element with a negative index
+Enum.at(details, -1) |> IO.inspect(label: 2)
+
+# Or use the `List` helper functions
+List.first(details) |> IO.inspect(label: 3)
+List.last(details) |> IO.inspect(label: 4)
+
+# To update an element at a specific index
+List.replace_at(details, 1, 30) |> IO.inspect(label: 5)
+
+# You can delete the first occurrence of an element
+List.delete(details, 21) |> IO.inspect(label: 6)
+# Or delete an element at a specific index
+List.delete_at(details, -1) |> IO.inspect(label: 7)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: 21
+2: :active
+3: "Peter"
+4: :active
+5: ["Peter", 30, 190.47, true, :active]
+6: ["Peter", 190.47, true, :active]
+7: ["Peter", 21, 190.47, true]
+```
+
+## Tuples
+
+A `Tuple` is stored contiguously in memory. That makes accessing an element by its index or getting the tuple size a fast operation.
+
+```elixir
+hobbies = {"Sport", "Coffee", "Writing"}
+
+# Get the first element
+elem(hobbies, 0) |> IO.inspect(label: 1)
+
+# Update an element
+put_elem(hobbies, 2, "Reading") |> IO.inspect(label: 2)
+
+# Append an element
+Tuple.append(hobbies, "Coding") |> IO.inspect(label: 3)
+
+# Delete an element at a specific index
+Tuple.delete_at(hobbies, 1) |> IO.inspect(label: 4)
+
+# Get the Tuple size
+tuple_size(hobbies) |> IO.inspect(label: 5)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: "Sport"
+2: {"Sport", "Coffee", "Reading"}
+3: {"Sport", "Coffee", "Writing", "Coding"}
+4: {"Sport", "Writing"}
+5: 3
+```
+
+If you look closely at the output above, you'll see that although we update and append elements to our tuple, the original `hobbies` variable is not modified; instead, every function call returns a copy of the input variable.
