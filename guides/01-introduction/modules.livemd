@@ -1,0 +1,50 @@
+# Modules
+
+A `Module` is a wrapper for functions. If you come from Object-oriented Programming (OOP), they might look a lot like classes, but they are not. They merely help you to organize your code.
+
+Here's how you define a module:
+
+```elixir
+defmodule ElixirByExample.Profile do
+  @moduledoc "This is the Profile module."
+
+  # This is a 'Module Attribute'. It is a constant value that is set at compile time.
+  # You cannot access it from outside the module.
+  @legal_age 18
+
+  # If you need to access module attributes outside the module, it is common to write
+  # a little public function that only returns the value:
+  def legal_age, do: @legal_age
+
+  # This is a public function. You can call it from outside the module.
+  def adult?(age) do
+    if age_valid?(age) do
+      age >= @legal_age
+    else
+      raise "Invalid age #{age}"
+    end
+  end
+
+  # This is a private function. You can call it only from inside the module.
+  defp age_valid?(age) do
+    age >= 0
+  end
+end
+```
+
+You can call a module function like this:
+
+```elixir
+ElixirByExample.Profile.adult?(18) |> IO.inspect(label: 1)
+ElixirByExample.Profile.adult?(17) |> IO.inspect(label: 2)
+ElixirByExample.Profile.adult?(-1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: true
+2: false
+** (RuntimeError) Invalid age -1
+    #cell:ephnppjvminxbiag:13: ElixirByExample.Profile.adult?/1
+```

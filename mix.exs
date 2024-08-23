@@ -53,6 +53,10 @@ defmodule ElixirByExample.MixProject do
         "guides/01-introduction/lists-and-tuples.livemd",
         "guides/01-introduction/maps.livemd",
         "guides/01-introduction/keyword-lists.livemd",
+        "guides/01-introduction/modules.livemd",
+        "guides/01-introduction/structs.livemd",
+        "guides/01-introduction/functions.livemd",
+        "guides/01-introduction/pattern-matching.livemd",
         "guides/09-misc/big-o.livemd"
       ],
       groups_for_extras: [
