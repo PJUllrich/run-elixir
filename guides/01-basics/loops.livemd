@@ -1,1 +1,84 @@
 # Loops
+
+You can iterate over lists, tuples, keyword lists, and maps in a few different ways. Here are the most common ones:
+
+## The `for/1` Comprehension
+
+```elixir
+# You can iterate over a range ascending
+result = for idx <- 1..10//1, do: idx
+IO.inspect(result, label: "range - asc")
+
+# Or descending. Note the step of -1.
+# If you don't set the step, the loop will stop after the first element.
+result = for idx <- 10..1//-1, do: idx
+IO.inspect(result, label: "range - desc")
+
+# You can iterate through a list of elements
+result = for el <- ["Peter", 21, 190.47, :active], do: el
+IO.inspect(result, label: "elements")
+
+# Or you can have a nested for-loop
+result = for x <- [1, 2], y <- [4, 5], do: [x: x, y: y]
+IO.inspect(result, label: "nested")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+range - asc: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+range - desc: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+elements: ["Peter", 21, 190.47, :active]
+nested: [[x: 1, y: 4], [x: 1, y: 5], [x: 2, y: 4], [x: 2, y: 5]]
+```
+
+## `Enum` helpers
+
+You will mostly use the `Enum` helper functions to iterate and modify collections. Here are the most used ones:
+
+```elixir
+# Apply a function to every element and return the result.
+Enum.map([1, 2, 3], fn x -> x * 2 end) |> IO.inspect(label: "Enum.map")
+
+# Apply a function, but ignore the result.
+Enum.each([1, 2, 3], fn x -> x * 2 end) |> IO.inspect(label: "Enum.each")
+
+# Apply a function and add the result to an accumulator.
+Enum.reduce([1, 2, 3], 0, fn x, acc -> acc + x end) |> IO.inspect(label: "Enum.reduce")
+
+# Filter out elements if the function returns a truthy value.
+Enum.filter([1, 2, 3], fn x -> x == 2 end) |> IO.inspect(label: "Enum.filter")
+
+# Filter out elements if the function returns a falsy value.
+Enum.reject([1, 2, 3], fn x -> x == 2 end) |> IO.inspect(label: "Enum.reject")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Enum.map: [2, 4, 6]
+Enum.each: :ok
+Enum.reduce: 6
+Enum.filter: [2]
+Enum.reject: [1, 3]
+```
+
+## Recursive Functions
+
+A common pattern in functional programming is to have recursive loops using function clauses. Elixir uses [tail call optimisation](https://en.wikipedia.org/wiki/Tail_call) to keep the memory overhead low and to avoid stack overflows. In practice, you'll rarely use recursion, but use the `Enum` helper functions instead.
+
+```elixir
+defmodule ElixirByExample.Loop do
+  def loop(collection, fun), do: do_loop(collection, [], fun)
+
+  # Applies an anonymous function to each element and returns the result as list.
+  defp do_loop([], result, _fun), do: Enum.reverse(result)
+  defp do_loop([idx | rest], result, fun), do: do_loop(rest, [fun.(idx) | result], fun)
+end
+
+ElixirByExample.Loop.loop([1, 2, 3], &(&1 * 2)) |> IO.inspect(label: "Result")
+```
+
+```
+Result: [2, 4, 6]
+```

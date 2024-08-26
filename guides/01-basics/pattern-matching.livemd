@@ -8,7 +8,7 @@ Pattern matching is extremely powerful in Elixir and you'll use it all the time.
 %{age: age, name: name} = %{age: 21, name: "Peter", height: 190.47}
 IO.inspect([age, name], label: 1)
 
-# Or a Tuple. You can't match only partially though.
+# Or a Tuple. You can't match partially though.
 {a, _, c} = {1, 2, 3}
 IO.inspect([a, c], label: 2)
 
