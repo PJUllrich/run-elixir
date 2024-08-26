@@ -49,20 +49,21 @@ defmodule ElixirByExample.MixProject do
       api_reference: false,
       extras: [
         "README.md",
-        "guides/01-introduction/welcome.livemd",
-        "guides/01-introduction/lists-and-tuples.livemd",
-        "guides/01-introduction/maps.livemd",
-        "guides/01-introduction/keyword-lists.livemd",
-        "guides/01-introduction/modules.livemd",
-        "guides/01-introduction/structs.livemd",
-        "guides/01-introduction/functions.livemd",
-        "guides/01-introduction/pattern-matching.livemd",
+        "guides/01-basics/welcome.livemd",
+        "guides/01-basics/lists-and-tuples.livemd",
+        "guides/01-basics/maps.livemd",
+        "guides/01-basics/keyword-lists.livemd",
+        "guides/01-basics/modules.livemd",
+        "guides/01-basics/structs.livemd",
+        "guides/01-basics/functions.livemd",
+        "guides/01-basics/pattern-matching.livemd",
         "guides/09-misc/big-o.livemd"
       ],
       groups_for_extras: [
-        Introduction: [~r"/01-introduction/"],
+        "The Basics": [~r"/01-basics/"],
         Miscellaneous: [~r"/09-misc/"]
-      ]
+      ],
+      deps: [req: "https://hexdocs.pm/req"]
     ]
   end
 end

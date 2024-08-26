@@ -3,7 +3,7 @@
 ## [Map](https://hexdocs.pm/elixir/1.17/Map.html)
 
 | Operation | Time Complexity |
-| --------- | ---  |
+| --- | ---  |
 | Access    | `O(log n)` |
 | Search    | `O(log n)` |
 | Insertion | `O(log n)` |
@@ -16,7 +16,7 @@
 ## [List](https://hexdocs.pm/elixir/1.17/List.html)
 
 | Operation | Time Complexity                       |
-| --------- | ------------------------------------- |
+| --- | ---  |
 | Access    | `O(n)`                                  |
 | Search    | `O(n)`                                  |
 | Insertion | `O(1)` for prepending, otherwise `O(n)`   |
@@ -33,11 +33,14 @@ Every entry in a `Keyword (list)` is a tuple with the first element being the `k
 
 ```elixir
 keyword = [{:a, 1}, {:b, 2}]
+# Can also be written as:
+keyword = [a: 1, b: 2]
 ```
 
 **Caveats**
 
-- A keyword list **does not** guarantee order.
+- Keys must be atoms.
+- Keys are ordered, as specified by the developer.
 - A keyword list may have duplicate keys, but duplicates are often ignored by functions like `Keyword.get/3` (returns the first match) and are even removed by e.g. `Keyword.put/3` and `Keyword.delete/2`.
 ```elixir
 iex> Keyword.get([{:a, 1}, {:a, 2}], :a)
@@ -53,7 +56,7 @@ iex> Keyword.delete([{:a, 1}, {:a, 2}], :a)
 ## [Tuple](https://hexdocs.pm/elixir/1.17/Tuple.html)
 
 | Operation | Time Complexity |
-| --------- | --------------- |
+| --- | ---  |
 | Access    | `O(1)`            |
 | Search    | `O(n)`            |
 | Insertion | `O(n)`            |
@@ -68,7 +71,7 @@ iex> Keyword.delete([{:a, 1}, {:a, 2}], :a)
 ## [(erlang) array](https://www.erlang.org/doc/man/array.html)
 
 | Operation | Time Complexity                                                                          |
-| --------- | ---------------------------------------------------------------------------------------- |
+| --- | ---  |
 | Access    | `O(log n)` [[7]](https://erlang.org/pipermail/erlang-questions/2015-September/086001.html) |
 | Search    | `O(log n)`                                                                                 |
 | Insertion | `O(log n)`                                                                                 |
