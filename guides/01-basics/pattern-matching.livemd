@@ -5,7 +5,7 @@ Pattern matching is extremely powerful in Elixir and you'll use it all the time.
 ```elixir
 # You can match against many data structures, like a map.
 # This is a partial match, meaning the 'height' value gets ignored.
-%{age: age, name: name} = %{age: 21, name: "Peter", height: 190.47}
+%{age: age, name: name} = %{age: 32, name: "Peter", height: 190.47}
 IO.inspect([age, name], label: 1)
 
 # Or a Tuple. You can't match partially though.
@@ -29,7 +29,7 @@ IO.inspect(tail, label: "5 - tail")
 <!-- livebook:{"output":true} -->
 
 ```
-1: [21, "Peter"]
+1: [32, "Peter"]
 2: [1, 3]
 3: [1, 2, 3]
 4: [1, 2]
@@ -47,7 +47,7 @@ fun = fn
 end
 
 fun.(%{status: :active, height: 190.47}) |> IO.inspect(label: 1)
-fun.(%{age: 21, height: 190.47}) |> IO.inspect(label: 2)
+fun.(%{age: 32, height: 190.47}) |> IO.inspect(label: 2)
 
 # Or in Module functions
 defmodule ElixirByExample.Profile do
@@ -63,7 +63,7 @@ end
 
 ```
 1: :active
-2: 21
+2: 32
 3: :inactive
 4: 30
 ```

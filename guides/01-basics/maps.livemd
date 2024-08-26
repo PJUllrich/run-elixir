@@ -5,13 +5,13 @@ Associative data structures are able to associate a key to a certain value. You 
 A `Map` is a key-value store that can contain any value as a key.
 
 ```elixir
-map = %{:hello => "World!", 21 => :age, "height" => 190.47}
+map = %{:hello => "World!", 32 => :age, "height" => 190.47}
 
 # If the key is an Atom, you can access its value using the dot-notation
 map.hello |> IO.inspect(label: 1)
 
 # Otherwise, you need to use the bracket-notation
-map[21] |> IO.inspect(label: 2)
+map[32] |> IO.inspect(label: 2)
 map["height"] |> IO.inspect(label: 3)
 
 # A `nil` is returned if the key does not exist
@@ -21,7 +21,7 @@ map["foo"] |> IO.inspect(label: 4)
 Map.delete(map, :hello) |> IO.inspect(label: 5)
 
 # Or delete multiple keys at once
-Map.drop(map, [:hello, 21]) |> IO.inspect(label: 6)
+Map.drop(map, [:hello, 32]) |> IO.inspect(label: 6)
 ```
 
 <!-- livebook:{"output":true} -->
@@ -31,7 +31,7 @@ Map.drop(map, [:hello, 21]) |> IO.inspect(label: 6)
 2: :age
 3: 190.47
 4: nil
-5: %{21 => :age, "height" => 190.47}
+5: %{32 => :age, "height" => 190.47}
 6: %{"height" => 190.47}
 ```
 
@@ -40,27 +40,27 @@ Map.drop(map, [:hello, 21]) |> IO.inspect(label: 6)
 If your map contains only Atom keys, you can replace the arrow `=>` with a semicolon `:`
 
 ```elixir
-map = %{hello: "World", age: 21, height: 190.47}
+map = %{hello: "World", age: 32, height: 190.47}
 map.age |> IO.inspect()
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-21
+32
 ```
 
 The advantage of this notation is that Elixir raises an error if you try to access a key that doesn't exist:
 
 ```elixir
-map = %{hello: "World", age: 21, height: 190.47}
+map = %{hello: "World", age: 32, height: 190.47}
 map.agee
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-** (KeyError) key :agee not found in: %{hello: "World", age: 21, height: 190.47}. Did you mean:
+** (KeyError) key :agee not found in: %{hello: "World", age: 32, height: 190.47}. Did you mean:
 
       * :age
 
@@ -71,37 +71,37 @@ map.agee
 There are a few ways to update a value in a map. They all have their pros and cons:
 
 ```elixir
-map = %{age: 21, name: "Peter"}
+map = %{age: 32, name: "Peter"}
 
 # This notation updates a map value:
-Map.put(map, :age, 22) |> IO.inspect(label: 1)
+Map.put(map, :age, 33) |> IO.inspect(label: 1)
 # But it also adds non-existent keys, which is bad if we make a typo:
-Map.put(map, :aeg, 22) |> IO.inspect(label: 2)
+Map.put(map, :aeg, 33) |> IO.inspect(label: 2)
 
 # This notation does not add non-existent keys,
 # but it stays silent if we make a typo.
-Map.replace(map, :aeg, 22) |> IO.inspect(label: 3)
+Map.replace(map, :aeg, 33) |> IO.inspect(label: 3)
 # This version raises an error instead:
-Map.replace!(map, :aeg, 22)
+Map.replace!(map, :aeg, 33)
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-1: %{name: "Peter", age: 22}
-2: %{name: "Peter", age: 21, aeg: 22}
-3: %{name: "Peter", age: 21}
-** (KeyError) key :aeg not found in: %{name: "Peter", age: 21}
-    (stdlib 6.0) :maps.update(:aeg, 22, %{name: "Peter", age: 21})
+1: %{name: "Peter", age: 33}
+2: %{name: "Peter", age: 32, aeg: 33}
+3: %{name: "Peter", age: 32}
+** (KeyError) key :aeg not found in: %{name: "Peter", age: 32}
+    (stdlib 6.0) :maps.update(:aeg, 33, %{name: "Peter", age: 32})
 ```
 
 Lastly, there is a shorthand notation which comes in handy if you don't want to "pipe" (we'll discuss it later) your output.
 
 ```elixir
-map = %{age: 21, name: "Peter"}
+map = %{age: 32, name: "Peter"}
 
 # This shorthand notation also updates existing keys:
-%{map | age: 22, name: "Pietah"} |> IO.inspect(label: 1)
+%{map | age: 33, name: "Pietah"} |> IO.inspect(label: 1)
 # But it raises an error too if the key does not exist
 %{map | height: 190.47}
 ```
@@ -109,9 +109,9 @@ map = %{age: 21, name: "Peter"}
 <!-- livebook:{"output":true} -->
 
 ```
-1: %{age: 22, name: "Pietah"}
-** (KeyError) key :height not found in: %{name: "Peter", age: 21}
-    (stdlib 6.0) :maps.update(:height, 190.47, %{name: "Peter", age: 21})
+1: %{age: 33, name: "Pietah"}
+** (KeyError) key :height not found in: %{name: "Peter", age: 32}
+    (stdlib 6.0) :maps.update(:height, 190.47, %{name: "Peter", age: 32})
     (stdlib 6.0) erl_eval.erl:465: anonymous fn/2 in :erl_eval.expr/6
     (stdlib 6.0) lists.erl:2146: :lists.foldl/3
     (stdlib 6.0) erl_eval.erl:462: :erl_eval.expr/6
@@ -126,7 +126,7 @@ map = %{age: 21, name: "Peter"}
 Map keys are not ordered and if you iterate over the elements of a map, you cannot expect that the "first" key will always be the same.
 
 ```elixir
-map = %{"hello" => "World", "age" => 21, "height" => 190.47}
+map = %{"hello" => "World", "age" => 32, "height" => 190.47}
 Enum.map(map, fn {key, _value} -> IO.inspect(key) end)
 ```
 
@@ -141,12 +141,12 @@ Enum.map(map, fn {key, _value} -> IO.inspect(key) end)
 Maps cannot have duplicate keys. If you define duplicate keys, the latter key will overwrite the earlier key and a warning will be shown:
 
 ```elixir
-%{name: "Peter", age: 21, name: "Pietah"}
+%{name: "Peter", age: 32, name: "Pietah"}
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-%{name: "Pietah", age: 21}
+%{name: "Pietah", age: 32}
 warning: key :name will be overridden in map
 ```

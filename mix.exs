@@ -61,6 +61,10 @@ defmodule ElixirByExample.MixProject do
         "guides/01-basics/pattern-matching.livemd",
         "guides/01-basics/control-flow.livemd",
         "guides/01-basics/loops.livemd",
+        "guides/02-getting-started/install-elixir.livemd",
+        "guides/02-getting-started/create-phx-project.livemd",
+        "guides/02-getting-started/install-dependencies.livemd",
+        "guides/02-getting-started/deploy-with-fly.livemd",
         "guides/09-misc/big-o.livemd",
         "guides/09-misc/async.livemd",
         "guides/09-misc/behaviours-and-protocols.livemd",
@@ -69,6 +73,7 @@ defmodule ElixirByExample.MixProject do
       ],
       groups_for_extras: [
         "The Basics": [~r"/01-basics/"],
+        "Getting Started": [~r"/02-getting-started/"],
         Miscellaneous: [~r"/09-misc/"]
       ]
     ]

@@ -9,7 +9,7 @@ A `Keyword` list is a list of key-value pairs that has three special characteris
 Here's how to use keyword lists:
 
 ```elixir
-keyword = [name: "Peter", age: 21, name: "Pietah"]
+keyword = [name: "Peter", age: 32, name: "Pietah"]
 
 # Access an element using the bracket notation
 keyword[:age] |> IO.inspect(label: 1)
@@ -21,7 +21,7 @@ keyword[:name] |> IO.inspect(label: 2)
 Keyword.get(keyword, :age) |> IO.inspect(label: 3)
 
 # Replace an existing value with a new one
-Keyword.replace(keyword, :age, 22) |> IO.inspect(label: 6)
+Keyword.replace(keyword, :age, 33) |> IO.inspect(label: 6)
 
 # When you update a duplicate key, it will only keep the new value and remove the rest
 Keyword.replace(keyword, :name, "Pieter") |> IO.inspect(label: 7)
@@ -36,13 +36,11 @@ Keyword.delete_first(keyword, :name) |> IO.inspect(label: 9)
 <!-- livebook:{"output":true} -->
 
 ```
-1: 21
+1: 32
 2: "Peter"
-3: 21
-4: {:ok, 21}
-5: 21
-6: [name: "Peter", age: 22, name: "Pietah"]
-7: [name: "Pieter", age: 21]
-8: [age: 21]
-9: [age: 21, name: "Pietah"]
+3: 32
+6: [name: "Peter", age: 33, name: "Pietah"]
+7: [name: "Pieter", age: 32]
+8: [age: 32]
+9: [age: 32, name: "Pietah"]
 ```

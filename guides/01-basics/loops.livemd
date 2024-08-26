@@ -15,7 +15,7 @@ result = for idx <- 10..1//-1, do: idx
 IO.inspect(result, label: "range - desc")
 
 # You can iterate through a list of elements
-result = for el <- ["Peter", 21, 190.47, :active], do: el
+result = for el <- ["Peter", 32, 190.47, :active], do: el
 IO.inspect(result, label: "elements")
 
 # Or you can have a nested for-loop
@@ -28,7 +28,7 @@ IO.inspect(result, label: "nested")
 ```
 range - asc: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 range - desc: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-elements: ["Peter", 21, 190.47, :active]
+elements: ["Peter", 32, 190.47, :active]
 nested: [[x: 1, y: 4], [x: 1, y: 5], [x: 2, y: 4], [x: 2, y: 5]]
 ```
 
@@ -78,6 +78,8 @@ end
 
 ElixirByExample.Loop.loop([1, 2, 3], &(&1 * 2)) |> IO.inspect(label: "Result")
 ```
+
+<!-- livebook:{"output":true} -->
 
 ```
 Result: [2, 4, 6]

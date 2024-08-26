@@ -7,7 +7,7 @@ Elixir has two collection types: (Linked) Lists and Tuples.
 A `List` is defined with square brackets and can contain elements of different data types:
 
 ```elixir
-details = ["Peter", 21, 190.47, true, :active]
+details = ["Peter", 32, 190.47, true, :active]
 ```
 
 Lists are not stored contiguously in memory because they are implemented as [linked lists](https://en.wikipedia.org/wiki/Linked_list). Each element is stored in memory with its value and a pointer to the next element. This structure makes traversing, updating, deleting, and prepending values slow, but appending new values fast. For more information, see the [Big-O Time Complexities](09-misc/big-o.livemd) section.
@@ -15,7 +15,7 @@ Lists are not stored contiguously in memory because they are implemented as [lin
 You can access elements in various ways:
 
 ```elixir
-details = ["Peter", 21, 190.47, true, :active]
+details = ["Peter", 32, 190.47, true, :active]
 
 # Returns the 2nd element, because lists are 0-based.
 Enum.at(details, 1) |> IO.inspect(label: 1)
@@ -37,7 +37,7 @@ List.replace_at(details, 1, 30) |> IO.inspect(label: 5)
 details ++ [nil, 123] |> IO.inspect(label: 7)
 
 # Delete the first occurrence of an element
-List.delete(details, 21) |> IO.inspect(label: 8)
+List.delete(details, 32) |> IO.inspect(label: 8)
 
 # Or delete an element at a specific index
 List.delete_at(details, -1) |> IO.inspect(label: 9)
@@ -46,15 +46,15 @@ List.delete_at(details, -1) |> IO.inspect(label: 9)
 <!-- livebook:{"output":true} -->
 
 ```
-1: 21
+1: 32
 2: :active
 3: "Peter"
 4: :active
 5: ["Peter", 30, 190.47, true, :active]
-6: [:adult, "Peter", 21, 190.47, true, :active]
-7: ["Peter", 21, 190.47, true, :active, nil, 123]
+6: [:adult, "Peter", 32, 190.47, true, :active]
+7: ["Peter", 32, 190.47, true, :active, nil, 123]
 8: ["Peter", 190.47, true, :active]
-9: ["Peter", 21, 190.47, true]
+9: ["Peter", 32, 190.47, true]
 ```
 
 ## Tuples
