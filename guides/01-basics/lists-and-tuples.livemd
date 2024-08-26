@@ -20,14 +20,14 @@ details = ["Peter", 21, 190.47, true, :active]
 # Returns the 2nd element, because lists are 0-based.
 Enum.at(details, 1) |> IO.inspect(label: 1)
 
-# You can get the last element with a negative index
+# Get the last element with a negative index
 Enum.at(details, -1) |> IO.inspect(label: 2)
 
 # Or use the `List` helper functions
 List.first(details) |> IO.inspect(label: 3)
 List.last(details) |> IO.inspect(label: 4)
 
-# To update an element at a specific index
+# Update an element at a specific index
 List.replace_at(details, 1, 30) |> IO.inspect(label: 5)
 
 # Prepend a new value to the list
@@ -36,8 +36,9 @@ List.replace_at(details, 1, 30) |> IO.inspect(label: 5)
 # Concatenate two lists
 details ++ [nil, 123] |> IO.inspect(label: 7)
 
-# You can delete the first occurrence of an element
+# Delete the first occurrence of an element
 List.delete(details, 21) |> IO.inspect(label: 8)
+
 # Or delete an element at a specific index
 List.delete_at(details, -1) |> IO.inspect(label: 9)
 ```

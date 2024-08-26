@@ -14,11 +14,14 @@ map.hello |> IO.inspect(label: 1)
 map[21] |> IO.inspect(label: 2)
 map["height"] |> IO.inspect(label: 3)
 
+# A `nil` is returned if the key does not exist
+map["foo"] |> IO.inspect(label: 4)
+
 # Delete one key from the map
-Map.delete(map, :hello) |> IO.inspect(label: 4)
+Map.delete(map, :hello) |> IO.inspect(label: 5)
 
 # Or delete multiple keys at once
-Map.drop(map, [:hello, 21]) |> IO.inspect(label: 5)
+Map.drop(map, [:hello, 21]) |> IO.inspect(label: 6)
 ```
 
 <!-- livebook:{"output":true} -->
@@ -27,8 +30,9 @@ Map.drop(map, [:hello, 21]) |> IO.inspect(label: 5)
 1: "World!"
 2: :age
 3: 190.47
-4: %{21 => :age, "height" => 190.47}
-5: %{"height" => 190.47}
+4: nil
+5: %{21 => :age, "height" => 190.47}
+6: %{"height" => 190.47}
 ```
 
 ### Maps with Atom keys

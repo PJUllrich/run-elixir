@@ -11,7 +11,7 @@ Here's how to use keyword lists:
 ```elixir
 keyword = [name: "Peter", age: 21, name: "Pietah"]
 
-# You can access an element using the bracket notation
+# Access an element using the bracket notation
 keyword[:age] |> IO.inspect(label: 1)
 
 # But it will only return the first key
@@ -20,16 +20,16 @@ keyword[:name] |> IO.inspect(label: 2)
 # You can also use a helper function
 Keyword.get(keyword, :age) |> IO.inspect(label: 3)
 
-# This is how you replace an existing value with a new one
+# Replace an existing value with a new one
 Keyword.replace(keyword, :age, 22) |> IO.inspect(label: 6)
 
 # When you update a duplicate key, it will only keep the new value and remove the rest
 Keyword.replace(keyword, :name, "Pieter") |> IO.inspect(label: 7)
 
-# This is how to delete all pairs that have a given key
+# Delete all pairs that have a given key
 Keyword.delete(keyword, :name) |> IO.inspect(label: 8)
 
-# To only delete the first occurrence, use this function
+# Only delete the first occurrence
 Keyword.delete_first(keyword, :name) |> IO.inspect(label: 9)
 ```
 
