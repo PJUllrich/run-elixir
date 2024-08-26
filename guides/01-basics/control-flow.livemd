@@ -1,9 +1,111 @@
 # Control Flow
 
-## if-then-else
+Elixir offers three control flow structures: `if/unless`, `case`, and `cond`
 
-## case
+## `if/2` and `unless/2`
+If-else works as you'd expect. If your condition evaluates to `truthy` (not `nil` or `false`), the code block is executed and the result is returned. If the condition evaluates to `falsy` (`nil` or `false`), the `else` block is executed if it exists; otherwise, `nil` is returned.
 
-## cond
+The reversed form of `if/2` is `unless/2`. If your `unless` condition evaluates to `truthy`, the `else` block is executed. If the condition is `falsy`, the first block is executed. It is common to choose `if` over `unless` because it doesn't make your brain hurt, unless you want to execute a side effect or throw an exception.
 
-## Loops
+```elixir
+age = 17
+
+result =
+  if age >= 18 do
+    :adult
+  else
+    :minor
+  end
+
+IO.inspect(result, label: 1)
+
+unless age >= 18 do
+  raise "A minor tries to access the system!"
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: :minor
+** (RuntimeError) A minor tries to access the system!
+```
+
+## `case/2`
+
+The `case` statement is similar to `switch` in other languages. It allows you to state multiple clauses and tries to match your conditional against each clause.
+
+```elixir
+active_status = :active
+
+fun =
+  fn value ->
+    case value do
+      %{status: ^active_status} -> :active
+      %{status: _other_status} -> :inactive
+
+      %{age: nil} -> :age_missing
+      %{age: age} when is_integer(age) and age >= 18 -> :adult
+      %{age: age} when is_integer(age) -> :minor
+
+      # An optional fallback which always matches.
+      # Without it, the case-statement would raise an exception
+      # if no clause matches.
+      _ -> :default
+    end
+  end
+
+fun.(%{status: :active}) |> IO.inspect(label: 1)
+fun.(%{status: :foobar}) |> IO.inspect(label: 2)
+
+fun.(%{age: nil}) |> IO.inspect(label: 3)
+fun.(%{age: 18}) |> IO.inspect(label: 4)
+fun.(%{age: 17}) |> IO.inspect(label: 5)
+
+fun.(nil) |> IO.inspect(label: 6)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: :active
+2: :inactive
+3: :age_missing
+4: :adult
+5: :minor
+6: :default
+```
+
+## `cond/1`
+
+The `cond` construct allows you to evaluate multiple clauses and return from the first that evaluates to `truthy`. It is especially useful if you need to execute a function in a clause.
+
+```elixir
+adult? = fn age -> age >= 18 end
+
+fun =
+  fn value ->
+    cond do
+      value == :active -> :active
+      is_integer(value) && adult?.(value) -> :adult
+      is_integer(value) -> :minor
+      # The fallback clause must always evaluate to a truthy value
+      true -> :default
+    end
+  end
+
+fun.(:active) |> IO.inspect(label: 1)
+fun.(18) |> IO.inspect(label: 2)
+fun.(17) |> IO.inspect(label: 3)
+fun.(nil) |> IO.inspect(label: 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+1: :active
+2: :adult
+3: :minor
+4: :default
+```

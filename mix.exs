@@ -26,7 +26,8 @@ defmodule ElixirByExample.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.34", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false},
+      {:publishex, "~> 1.0.1", only: :dev, runtime: false}
     ]
   end
 
@@ -59,6 +60,7 @@ defmodule ElixirByExample.MixProject do
         "guides/01-basics/pipes.livemd",
         "guides/01-basics/pattern-matching.livemd",
         "guides/01-basics/control-flow.livemd",
+        "guides/01-basics/loops.livemd",
         "guides/09-misc/big-o.livemd",
         "guides/09-misc/async.livemd",
         "guides/09-misc/behaviours-and-protocols.livemd",

@@ -1,1 +1,92 @@
 # Pattern Matching
+
+Pattern matching is extremely powerful in Elixir and you'll use it all the time. Let's see some examples:
+
+```elixir
+# You can match against many data structures, like a map.
+# This is a partial match, meaning the 'height' value gets ignored.
+%{age: age, name: name} = %{age: 21, name: "Peter", height: 190.47}
+IO.inspect([age, name], label: 1)
+
+# Or a Tuple. You can't match only partially though.
+{a, _, c} = {1, 2, 3}
+IO.inspect([a, c], label: 2)
+
+# Or a Keyword list, but you can't match partially.
+[a: a, b: b, c: c] = [a: 1, b: 2, c: 3]
+IO.inspect([a, b, c], label: 3)
+
+# Or a list, but not partially either.
+[a, b, _] = [1, 2, 3]
+IO.inspect([a, b], label: 4)
+
+# But you can match against the head and tail of a list.
+[head | tail] = [1, 2, 3]
+IO.inspect(head, label: "5 - head")
+IO.inspect(tail, label: "5 - tail")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: [21, "Peter"]
+2: [1, 3]
+3: [1, 2, 3]
+4: [1, 2]
+5 - head: 1
+5 - tail: [2, 3]
+```
+
+Pattern matching is especially useful to match against function arguments.
+
+```elixir
+# You can match (partially) in function clauses:
+fun = fn
+  %{status: status} -> status
+  %{age: age} -> age
+end
+
+fun.(%{status: :active, height: 190.47}) |> IO.inspect(label: 1)
+fun.(%{age: 21, height: 190.47}) |> IO.inspect(label: 2)
+
+# Or in Module functions
+defmodule ElixirByExample.Profile do
+  def details(%{status: status}), do: status
+  def details(%{age: age}), do: age
+end
+
+%{status: :inactive} |> ElixirByExample.Profile.details() |> IO.inspect(label: 3)
+%{age: 30} |> ElixirByExample.Profile.details() |> IO.inspect(label: 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: :active
+2: 21
+3: :inactive
+4: 30
+```
+
+## The Pin Operator
+
+The Pin `^` operator allows you to match against the value of an existing variable:
+
+```elixir
+name = "Peter"
+
+fun = fn
+  %{name: ^name} -> "That's me!"
+  %{name: _name} -> "That's not me."
+end
+
+fun.(%{name: "Peter"}) |> IO.inspect(label: 1)
+fun.(%{name: "Bob"}) |> IO.inspect(label: 2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: "That's me!"
+2: "That's not me."
+```

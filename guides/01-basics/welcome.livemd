@@ -1,6 +1,6 @@
 # Hello World!
 
-[Elixir](https://elixir-lang.org) is a dynamic, functional programming language for building scalable and maintainable applications. It puts the FUN back into FUNctional programming 😬. This guide will walk you through its basics in less than 20 minutes! Let's get started.
+[Elixir](https://elixir-lang.org) is a dynamic, functional programming language for building scalable and maintainable applications. It puts the FUN back into **FUN**ctional programming! This guide will walk you through its basics in less than 30 minutes! Let's get started.
 
 If you want to run the following code yourself, there are three options:
 

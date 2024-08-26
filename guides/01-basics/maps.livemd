@@ -138,7 +138,7 @@ Enum.map(map, fn {key, _value} -> IO.inspect(key) end)
 "hello"
 ```
 
-Also, maps cannot have duplicate keys. If you define duplicate keys, the latter key will overwrite the earlier key and a warning will be shown:
+Maps cannot have duplicate keys. If you define duplicate keys, the latter key will overwrite the earlier key and a warning will be shown:
 
 ```elixir
 %{name: "Peter", age: 21, name: "Pietah"}
@@ -149,5 +149,4 @@ Also, maps cannot have duplicate keys. If you define duplicate keys, the latter 
 ```
 %{name: "Pietah", age: 21}
 warning: key :name will be overridden in map
-└─ Library/Application Support/livebook/autosaved/2024_08_23/07_18_piwn/untitled_notebook.livemd#cell:ephnppjvminxbiag:1
 ```
