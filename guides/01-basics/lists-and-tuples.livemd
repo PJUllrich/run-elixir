@@ -30,10 +30,16 @@ List.last(details) |> IO.inspect(label: 4)
 # To update an element at a specific index
 List.replace_at(details, 1, 30) |> IO.inspect(label: 5)
 
+# Prepend a new value to the list
+[:adult | details] |> IO.inspect(label: 6)
+
+# Concatenate two lists
+details ++ [nil, 123] |> IO.inspect(label: 7)
+
 # You can delete the first occurrence of an element
-List.delete(details, 21) |> IO.inspect(label: 6)
+List.delete(details, 21) |> IO.inspect(label: 8)
 # Or delete an element at a specific index
-List.delete_at(details, -1) |> IO.inspect(label: 7)
+List.delete_at(details, -1) |> IO.inspect(label: 9)
 ```
 
 <!-- livebook:{"output":true} -->
@@ -44,8 +50,10 @@ List.delete_at(details, -1) |> IO.inspect(label: 7)
 3: "Peter"
 4: :active
 5: ["Peter", 30, 190.47, true, :active]
-6: ["Peter", 190.47, true, :active]
-7: ["Peter", 21, 190.47, true]
+6: [:adult, "Peter", 21, 190.47, true, :active]
+7: ["Peter", 21, 190.47, true, :active, nil, 123]
+8: ["Peter", 190.47, true, :active]
+9: ["Peter", 21, 190.47, true]
 ```
 
 ## Tuples

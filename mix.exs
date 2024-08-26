@@ -56,14 +56,19 @@ defmodule ElixirByExample.MixProject do
         "guides/01-basics/modules.livemd",
         "guides/01-basics/structs.livemd",
         "guides/01-basics/functions.livemd",
+        "guides/01-basics/pipes.livemd",
         "guides/01-basics/pattern-matching.livemd",
-        "guides/09-misc/big-o.livemd"
+        "guides/01-basics/control-flow.livemd",
+        "guides/09-misc/big-o.livemd",
+        "guides/09-misc/async.livemd",
+        "guides/09-misc/behaviours-and-protocols.livemd",
+        "guides/09-misc/http.livemd",
+        "guides/09-misc/logger.livemd"
       ],
       groups_for_extras: [
         "The Basics": [~r"/01-basics/"],
         Miscellaneous: [~r"/09-misc/"]
-      ],
-      deps: [req: "https://hexdocs.pm/req"]
+      ]
     ]
   end
 end

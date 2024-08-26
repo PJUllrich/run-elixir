@@ -1,5 +1,67 @@
 # Pipes
 
-then
+Elixir makes data transformation extremely easy because you can pass the result of one function into the next by using the pipe `|>` operator:
 
-tap
+```elixir
+add = fn a, b -> a + b end
+mult = fn a, b -> a * b end
+
+2
+|> add.(3)
+|> mult.(5)
+|> IO.inspect(label: "Result")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Result: 25
+```
+
+## `then/2`
+
+A pipe always passes the result of a function into the next one as the first argument. You can use `then/2` if you want to change the argument position or modify the result before passing it into the next function.
+
+```elixir
+add = fn a, b -> a + b end
+mult = fn a, b -> a * b end
+
+2
+|> add.(3)
+|> then(fn result ->
+  result = result * 2
+  mult.(1024, result)
+end)
+|> IO.inspect(label: "Result")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Result: 10240
+```
+
+## `tap/2`
+
+The `tap/2` helper allows you to 'tap into' a pipe without modifying its current value. It's useful for executing synchronous side effects without changing the value.
+
+```elixir
+add = fn a, b -> a + b end
+mult = fn a, b -> a * b end
+
+2
+|> add.(3)
+|> tap(fn result ->
+  IO.inspect(result, label: "Current")
+  result * 2 # <- The result of this equation is ignored.
+end)
+|> mult.(5)
+|> IO.inspect(label: "Result")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Current: 5
+Result: 25
+```

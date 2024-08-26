@@ -123,7 +123,7 @@ lazy_evaluate.(2048) |> IO.inspect(label: 3)
 3: 976562500.0
 ```
 
-You can assign an anonymous function to a variable and pass it around as an argument too. This comes in handy if you work with callbacks. In this example, we fetch a random cat picture using the HTTP library `m:Req` and execute the callback function with its result.
+You can assign an anonymous function to a variable and pass it around as an argument too. This comes in handy if you work with callbacks. In this example, we fetch a random cat picture using the HTTP library [Req](https://hexdocs.pm/req) and execute the callback function with its result.
 
 ```elixir
 defmodule ElixirByExample.Jokes do

@@ -22,8 +22,6 @@ IO.inspect("Hello World!")
 "Hello World!"
 ```
 
-Easy peasy!
-
 ## Variable assignment
 
 Assigning a value to a variable is super simple in Elixir. You just write `my_var =` and whatever is on the right side of the `=` sign gets assigned to the variable. Here is how to assign all the different basic types to variables:
@@ -38,7 +36,7 @@ adult? = true # Boolean
 status = :active # Atom
 address = nil # The 'None/null/Nil' value
 
-IO.inspect([name, age, age_hex, height, height_sci, adult?, statu, address])
+IO.inspect([name, age, age_hex, height, height_sci, adult?, status, address])
 ```
 
 <!-- livebook:{"output":true} -->
