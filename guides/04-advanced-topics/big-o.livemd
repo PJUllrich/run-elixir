@@ -8,6 +8,7 @@
 | Search    | `O(log n)` |
 | Insertion | `O(log n)` |
 | Deletion  | `O(log n)` |
+| Size | `O(1)` |
 
 **Caveats**:
 
@@ -21,6 +22,7 @@
 | Search    | `O(n)`                                  |
 | Insertion | `O(1)` for prepending, otherwise `O(n)`   |
 | Deletion  | `O(1)` if first element, otherwise `O(n)` |
+| Length | `O(n)` |
 
 **Caveats**
 
@@ -61,6 +63,7 @@ iex> Keyword.delete([{:a, 1}, {:a, 2}], :a)
 | Search    | `O(n)`            |
 | Insertion | `O(n)`            |
 | Deletion  | `O(n)`            |
+| Length | `O(1)` |
 
 **Caveats**
 
@@ -76,12 +79,23 @@ iex> Keyword.delete([{:a, 1}, {:a, 2}], :a)
 | Search    | `O(log n)`                                                                                 |
 | Insertion | `O(log n)`                                                                                 |
 | Deletion  | `O(log n)`                                                                                 |
+| Length | `O(log n)` |
 
 **Caveats**
 
 - An array is a trie of small tuples, with a smaller memory overhead to Lists
 - Deletion is actually a replace with the default value and creates sparse arrays
   - For real deletion, use [sparse_to_list/1](https://www.erlang.org/doc/man/array.html#sparse_to_list-1), which has `O(n)` complexity
+
+## [:queue](https://www.erlang.org/doc/apps/stdlib/queue.html)
+
+| Operation | Time Complexity                                                                          |
+| --- | ---  |
+| Access    | `O(1)` for first and last element, `O(n)` otherwise  |
+| Search    | `O(n)`                                                                                 |
+| Insertion | `O(1)`                                                                                 |
+| Deletion  | `O(n)`                                                                                 |
+| Length | `O(n)` |
 
 ## [MapSet](https://hexdocs.pm/elixir/1.17/MapSet.html#content)
 

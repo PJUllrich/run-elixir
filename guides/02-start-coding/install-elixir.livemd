@@ -1,0 +1,3 @@
+# Install Elixir
+
+TODO: Basically just link to the official Elixir installation guide

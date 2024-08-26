@@ -1,7 +1,5 @@
 # Hello World!
 
-[Elixir](https://elixir-lang.org) is a dynamic, functional programming language for building scalable and maintainable applications. It puts the FUN back into **FUN**ctional programming! This guide will walk you through its basics in less than 30 minutes! Let's get started.
-
 If you want to run the following code yourself, there are three options:
 
 1. Start an IEx REPL with `iex -S mix` and copy and paste the code into the command line.
@@ -22,7 +20,7 @@ IO.inspect("Hello World!")
 "Hello World!"
 ```
 
-## Variable assignment
+## Variable Assignment
 
 Assigning a value to a variable is super simple in Elixir. You just write `my_var =` and whatever is on the right side of the `=` sign gets assigned to the variable. Here is how to assign all the different basic types to variables:
 
@@ -66,14 +64,23 @@ _ = 30
 _result = 30 + 32
 ```
 
-## String Interpolation
+## String Interpolation and Concatenation
 
-You can interpolate strings in two ways:
+You can interpolate and concatenate strings like this:
 
 ```elixir
 # Interpolate a string with values
 name = "Peter"
 age = 32
-IO.inspect("I'm #{name} and ")
+IO.inspect("My name is #{name} and I am #{age} years old")
 
+# Concatenate two strings
+IO.inspect("But my real name is " <> "Batman 🦇")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"My name is Peter and I am 32 years old"
+"But my real name is Batman 🦇"
 ```

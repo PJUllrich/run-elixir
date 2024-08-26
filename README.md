@@ -1,21 +1,5 @@
-# ElixirByExample
+# Welcome to Elixir!
 
-**TODO: Add description**
+[Elixir](https://elixir-lang.org) is a dynamic, functional programming language for building scalable and maintainable applications. It puts the FUN back into **FUN**ctional programming! This guide will walk you through its basics in less than 30 minutes. Let's get started.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `elixir_by_example` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:elixir_by_example, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/elixir_by_example>.
-
+[Learn how to write 'Hello World'](guides/01-basics/hello-world.livemd)

@@ -26,7 +26,7 @@ defmodule ElixirByExample.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.34", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.34.2", only: :dev, runtime: false},
       {:publishex, "~> 1.0.1", only: :dev, runtime: false}
     ]
   end
@@ -50,7 +50,7 @@ defmodule ElixirByExample.MixProject do
       api_reference: false,
       extras: [
         "README.md",
-        "guides/01-basics/welcome.livemd",
+        "guides/01-basics/hello-world.livemd",
         "guides/01-basics/lists-and-tuples.livemd",
         "guides/01-basics/maps.livemd",
         "guides/01-basics/keyword-lists.livemd",
@@ -61,20 +61,27 @@ defmodule ElixirByExample.MixProject do
         "guides/01-basics/pattern-matching.livemd",
         "guides/01-basics/control-flow.livemd",
         "guides/01-basics/loops.livemd",
-        "guides/02-getting-started/install-elixir.livemd",
-        "guides/02-getting-started/create-phx-project.livemd",
-        "guides/02-getting-started/install-dependencies.livemd",
-        "guides/02-getting-started/deploy-with-fly.livemd",
-        "guides/09-misc/big-o.livemd",
-        "guides/09-misc/async.livemd",
-        "guides/09-misc/behaviours-and-protocols.livemd",
-        "guides/09-misc/http.livemd",
-        "guides/09-misc/logger.livemd"
+        "guides/02-start-coding/install-elixir.livemd",
+        "guides/02-start-coding/create-a-phoenix-project.livemd",
+        "guides/02-start-coding/install-dependencies.livemd",
+        "guides/02-start-coding/deploy-with-fly.livemd",
+        "guides/03-next-steps/continue-learning.livemd",
+        "guides/03-next-steps/join-the-community.livemd",
+        "guides/03-next-steps/stay-informed.livemd",
+        "guides/03-next-steps/find-a-job.livemd",
+        "guides/03-next-steps/find-libraries.livemd",
+        "guides/04-advanced-topics/async.livemd",
+        "guides/04-advanced-topics/behaviours-and-protocols.livemd",
+        "guides/04-advanced-topics/http.livemd",
+        "guides/04-advanced-topics/logger.livemd",
+        "guides/04-advanced-topics/macros.livemd",
+        "guides/04-advanced-topics/big-o.livemd"
       ],
       groups_for_extras: [
         "The Basics": [~r"/01-basics/"],
-        "Getting Started": [~r"/02-getting-started/"],
-        Miscellaneous: [~r"/09-misc/"]
+        "Start Coding": [~r"/02-start-coding/"],
+        "Next Steps": [~r"/03-next-steps/"],
+        "Advanced Topics": [~r"/04-advanced-topics/"]
       ]
     ]
   end

@@ -1,0 +1,3 @@
+# Macros
+
+TODO: Quick introduction to Macros, what they are, how to write a "using" macro and use a Module inside another one. Don't go into too much detail but rather give pointers to where to go next (e.g. The [Macros](https://hexdocs.pm/elixir/macros.html) page)

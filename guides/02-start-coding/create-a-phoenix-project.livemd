@@ -1,0 +1,3 @@
+# Create a Phoenix Project
+
+TODO: Explain how to install `phx.new` and create a new project with LiveView
