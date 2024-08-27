@@ -19,8 +19,7 @@ Stay up-to-date with this non-exhaustive list of Elixir content channels in no p
 
 ## Blogs
 
-* [Peter Ullrich (me!)](https://peterullrich.com)
-* [Indie Courses (my startup!)](https://indiecourses.com/blog)
+* [Peter Ullrich (me!)](https://peterullrich.com) and [Indie Courses (my startup!)](https://indiecourses.com/blog)
 * [Dashbit](https://dashbit.co/blog)
 * [Fly.io](https://fly.io/phoenix-files/)
 * [Elixirforum Blog Thread](https://elixirforum.com/t/elixir-blog-posts)
