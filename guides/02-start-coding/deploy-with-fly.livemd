@@ -1,3 +1,0 @@
-# Deploy to Fly.io
-
-TODO: Quick introduction to `fly launch`

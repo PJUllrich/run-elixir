@@ -24,3 +24,6 @@ elixir_by_example-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Ignore demo project
+/demo/

@@ -64,7 +64,7 @@ defmodule ElixirByExample.MixProject do
         "guides/02-start-coding/install-elixir.livemd",
         "guides/02-start-coding/create-a-phoenix-project.livemd",
         "guides/02-start-coding/install-dependencies.livemd",
-        "guides/02-start-coding/deploy-with-fly.livemd",
+        "guides/02-start-coding/deploy-your-project.livemd",
         "guides/03-next-steps/continue-learning.livemd",
         "guides/03-next-steps/join-the-community.livemd",
         "guides/03-next-steps/stay-informed.livemd",
