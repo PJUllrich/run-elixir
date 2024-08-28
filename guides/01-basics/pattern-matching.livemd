@@ -14,15 +14,15 @@ IO.inspect([age, name], label: 1)
 {a, _, c} = {1, 2, 3}
 IO.inspect([a, c], label: 2)
 
-# Or a Keyword list, but you can't match partially.
+# Or a Keyword list, but you can't match partially either.
 [a: a, b: b, c: c] = [a: 1, b: 2, c: 3]
 IO.inspect([a, b, c], label: 3)
 
-# Or a list, but not partially either.
+# Or a list, but again, not partially.
 [a, b, _] = [1, 2, 3]
 IO.inspect([a, b], label: 4)
 
-# But you can match against the head and tail of a list.
+# But you can match against the head (first element) and tail (the rest) of a list.
 [head | tail] = [1, 2, 3]
 IO.inspect(head, label: "5 - head")
 IO.inspect(tail, label: "5 - tail")
@@ -57,8 +57,8 @@ defmodule ElixirByExample.Profile do
   def details(%{age: age}), do: age
 end
 
-%{status: :inactive} |> ElixirByExample.Profile.details() |> IO.inspect(label: 3)
-%{age: 30} |> ElixirByExample.Profile.details() |> IO.inspect(label: 4)
+%{status: :inactive, height: 190.47} |> ElixirByExample.Profile.details() |> IO.inspect(label: 3)
+%{age: 30, height: 190.47} |> ElixirByExample.Profile.details() |> IO.inspect(label: 4)
 ```
 
 <!-- livebook:{"output":true} -->
@@ -78,8 +78,13 @@ end
 IO.inspect(name, label: 1)
 
 # Or you can match against specific bytes
-<<head::binary-size(6), rest::binary>> = "Batman is my name"
-IO.inspect(head, label: "2 - head")
+#
+# This is extremely useful for deconstructing a string into fixed-sized byte chunks.
+# For example, to implement a communicationi protocol for which you know that
+# the first 3 bytes are one argument, and the next 8 bytes are the second, and so on.
+<<article::binary-size(3), _space::binary-size(1), name::binary-size(6), rest::binary>> = "The Batman is my name"
+IO.inspect(article, label: "2 - article")
+IO.inspect(name, label: "2 - name")
 IO.inspect(rest, label: "2 - rest")
 ```
 

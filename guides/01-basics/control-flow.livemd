@@ -89,7 +89,8 @@ fun =
       value == :active -> :active
       is_integer(value) && adult?.(value) -> :adult
       is_integer(value) -> :minor
-      # The fallback clause must always evaluate to a truthy value
+      # The optional fallback clause must always evaluate to a truthy value.
+      # If you don't give this and no other clause matches, Elixir raises an exception.
       true -> :default
     end
   end

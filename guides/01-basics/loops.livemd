@@ -46,10 +46,10 @@ Enum.each([1, 2, 3], fn x -> x * 2 end) |> IO.inspect(label: "Enum.each")
 # Apply a function and add the result to an accumulator.
 Enum.reduce([1, 2, 3], 0, fn x, acc -> acc + x end) |> IO.inspect(label: "Enum.reduce")
 
-# Filter out elements if the function returns a truthy value.
+# Only keep the elements for which the function evaluates to truthy and filter out the rest.
 Enum.filter([1, 2, 3], fn x -> x == 2 end) |> IO.inspect(label: "Enum.filter")
 
-# Filter out elements if the function returns a falsy value.
+# Reject/remove an element if the function evaluates to truthy.
 Enum.reject([1, 2, 3], fn x -> x == 2 end) |> IO.inspect(label: "Enum.reject")
 ```
 

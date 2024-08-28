@@ -1,7 +1,5 @@
 # Install Dependencies
 
-TODO: Quick introduction to hex.pm and how to add a library to your project.
-
 You can install dependencies from a few sources, like the Elixir package manager [Hex.pm](hex.pm), GitHub, a Git repository, or a local path. You only need to add them to the `deps/0` function in your `mix.exs` file.
 
 Let's add the HTTP library, [Req](https://hex.pm/packages/req):
@@ -18,7 +16,7 @@ defp deps do
     # Or fetch a dependency directly from GitHub
     {:oban, github: "sorentwo/oban"},
     # Or from a Git repo
-    {:ex_money, git: "https://github.com/kipcole9/money.git"}
+    {:prom_ex, git: "https://github.com/akoutmos/prom_ex.git"}
     # Or from a local path (commented out because it doesn't exist, of course)
     # {:your_lib, path: "../relative/path/to/your/lib"}
   ]

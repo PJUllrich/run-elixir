@@ -1,12 +1,12 @@
 defmodule ElixirByExample.MixProject do
   use Mix.Project
 
-  @source_url "https://github.com/PJUllrich/elixir-by-example"
+  @source_url "https://github.com/PJUllrich/run-elixir"
   @version "0.0.1"
 
   def project do
     [
-      app: :elixir_by_example,
+      app: :run_elixir,
       version: @version,
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
