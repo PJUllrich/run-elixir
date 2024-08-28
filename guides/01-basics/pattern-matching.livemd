@@ -52,13 +52,13 @@ fun.(%{status: :active, height: 190.47}) |> IO.inspect(label: 1)
 fun.(%{age: 32, height: 190.47}) |> IO.inspect(label: 2)
 
 # Or in Module functions
-defmodule ElixirByExample.Profile do
+defmodule RunElixir.Profile do
   def details(%{status: status}), do: status
   def details(%{age: age}), do: age
 end
 
-%{status: :inactive, height: 190.47} |> ElixirByExample.Profile.details() |> IO.inspect(label: 3)
-%{age: 30, height: 190.47} |> ElixirByExample.Profile.details() |> IO.inspect(label: 4)
+%{status: :inactive, height: 190.47} |> RunElixir.Profile.details() |> IO.inspect(label: 3)
+%{age: 30, height: 190.47} |> RunElixir.Profile.details() |> IO.inspect(label: 4)
 ```
 
 <!-- livebook:{"output":true} -->

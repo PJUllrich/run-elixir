@@ -1,11 +1,11 @@
 # Control Flow
 
-Elixir offers three control flow structures: `if/unless`, `case`, and `cond`
+Elixir offers four control flow structures: `if/unless`, `case`, `cond`, and `with`.
 
 ## `if/2` and `unless/2`
 If-else works as you'd expect. If your condition evaluates to `truthy` (not `nil` or `false`), the code block is executed and the result is returned. If the condition evaluates to `falsy` (`nil` or `false`), the `else` block is executed if it exists; otherwise, `nil` is returned.
 
-The reversed form of `if/2` is `unless/2`. If your `unless` condition evaluates to `truthy`, the `else` block is executed. If the condition is `falsy`, the first block is executed. It is common to choose `if` over `unless` because it doesn't make your brain hurt, unless you want to execute a side effect or throw an exception.
+The reverse form of `if/2` is `unless/2`. If your `unless` condition evaluates to `truthy`, the `else` block is executed. If the condition is `falsy`, the first block is executed. It is common to choose `if` over `unless` because it doesn't make your brain hurt, unless you want to execute a side effect or throw an exception.
 
 ```elixir
 age = 17
@@ -49,8 +49,7 @@ fun =
       %{age: age} when is_integer(age) -> :minor
 
       # An optional fallback which always matches.
-      # Without it, the case-statement would raise an exception
-      # if no clause matches.
+      # Without it, the case statement would raise an exception if no clause matches.
       _ -> :default
     end
   end
@@ -109,4 +108,83 @@ fun.(nil) |> IO.inspect(label: 4)
 2: :adult
 3: :minor
 4: :default
+```
+
+## `with/1`
+
+The `with/1` statement is useful to return early from a sequence of steps if one step fails. If you find yourself writing nested if-else or case statements, you probably want to use `with/1` instead.
+
+```elixir
+adult? = fn age -> age >= 18 end
+details = %{name: "Peter", age: 32}
+
+# Instead of writing nested if- or case-statements like this:
+check_access = fn details ->
+  case details do
+    %{age: age} ->
+      if adult?.(age) do
+        :ok
+      else
+        {:error, :not_adult}
+      end
+
+    _ ->
+      {:error, :age_missing}
+  end
+end
+
+# Rather use one with-statement like this:
+check_access_refactored = fn details ->
+  with %{age: age} <- details,
+       true <- adult?.(age) do
+    :ok
+  else
+    # Gets executed if any of the matches above fails.
+    %{} -> {:error, :age_missing}
+    false -> {:error, :not_adult}
+  end
+end
+```
+
+To match inside the `else`-block isn't great though. What if two matches can return `false`? How would you know which match failed?
+
+It is good practice to move steps step into small helper functions. This allows you to return a specific error message depending on which step failed and it makes the `with`-statement more readable. It also makes it easy to see the "happy path" of your function and all its error cases.
+
+```elixir
+defmodule RunElixir.Permissions do
+  def check_access(details) do
+    with {:ok, age} <- get_age(details),
+         :ok <- check_adult(age) do
+      :ok
+    end
+  end
+
+  # Moving each step into a small helper function gives you the flexibility
+  # to decide inside the function which error to return.
+  defp get_age(details) do
+    case details do
+      %{age: age} when is_integer(age) -> {:ok, age}
+      %{age: _age} -> {:error, :age_invalid}
+      _ -> {:error, :age_missing}
+    end
+  end
+
+  defp check_adult(age) do
+    if age >= 18, do: :ok, else: {:error, :not_adult}
+  end
+end
+
+RunElixir.Permissions.check_access(%{age: 32}) |> IO.inspect(label: 1)
+RunElixir.Permissions.check_access(%{age: nil}) |> IO.inspect(label: 2)
+RunElixir.Permissions.check_access(%{name: "Peter"}) |> IO.inspect(label: 3)
+RunElixir.Permissions.check_access(%{age: 17}) |> IO.inspect(label: 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: :ok
+2: {:error, :age_invalid}
+3: {:error, :age_missing}
+4: {:error, :not_adult}
 ```

@@ -5,7 +5,7 @@ A `Module` is a wrapper for functions. If you come from Object-oriented Programm
 Here's how you define a module:
 
 ```elixir
-defmodule ElixirByExample.Profile do
+defmodule RunElixir.Profile do
   @moduledoc "This is the Profile module."
 
   # This is a 'Module Attribute'. It is a constant value that is set at compile time.
@@ -35,9 +35,9 @@ end
 You can call a module function like this:
 
 ```elixir
-ElixirByExample.Profile.adult?(18) |> IO.inspect(label: 1)
-ElixirByExample.Profile.adult?(17) |> IO.inspect(label: 2)
-ElixirByExample.Profile.adult?(-1)
+RunElixir.Profile.adult?(18) |> IO.inspect(label: 1)
+RunElixir.Profile.adult?(17) |> IO.inspect(label: 2)
+RunElixir.Profile.adult?(-1)
 ```
 
 <!-- livebook:{"output":true} -->
@@ -46,5 +46,5 @@ ElixirByExample.Profile.adult?(-1)
 1: true
 2: false
 ** (RuntimeError) Invalid age -1
-    #cell:ephnppjvminxbiag:13: ElixirByExample.Profile.adult?/1
+    #cell:ephnppjvminxbiag:13: RunElixir.Profile.adult?/1
 ```

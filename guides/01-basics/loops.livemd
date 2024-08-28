@@ -68,7 +68,7 @@ Enum.reject: [1, 3]
 A common pattern in functional programming is to have recursive loops using function clauses. Elixir uses [tail call optimisation](https://en.wikipedia.org/wiki/Tail_call) to keep the memory overhead low and to avoid stack overflows. In practice, you'll rarely use recursion, but use the `Enum` helper functions instead.
 
 ```elixir
-defmodule ElixirByExample.Loop do
+defmodule RunElixir.Loop do
   def loop(collection, fun), do: do_loop(collection, [], fun)
 
   # Applies an anonymous function to each element and returns the result as list.
@@ -76,7 +76,7 @@ defmodule ElixirByExample.Loop do
   defp do_loop([idx | rest], result, fun), do: do_loop(rest, [fun.(idx) | result], fun)
 end
 
-ElixirByExample.Loop.loop([1, 2, 3], &(&1 * 2)) |> IO.inspect(label: "Result")
+RunElixir.Loop.loop([1, 2, 3], &(&1 * 2)) |> IO.inspect(label: "Result")
 ```
 
 <!-- livebook:{"output":true} -->

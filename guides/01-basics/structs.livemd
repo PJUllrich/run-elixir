@@ -3,7 +3,7 @@
 A `Struct` is an extension of a `Map` and is defined inside a `Module`. It allows you to define the fields of a map at compile-time and raises if you try to set a field that doesn't exist. You can define a struct with `defstruct/1`.
 
 ```elixir
-defmodule ElixirByExample.Profile do
+defmodule RunElixir.Profile do
   # You can make fields required with this attribute
   @enforce_keys [:name]
   defstruct [:name, :age, status: :active] # <- We set a default value for :status here.
@@ -11,7 +11,7 @@ defmodule ElixirByExample.Profile do
   @legal_age 18
 
   # You can match against the struct fields in your function definition.
-  def adult?(%ElixirByExample.Profile{age: age}) do
+  def adult?(%RunElixir.Profile{age: age}) do
     age >= @legal_age
   end
 end
@@ -20,7 +20,7 @@ end
 You can create a struct like this:
 
 ```elixir
-struct = %ElixirByExample.Profile{name: "Peter", age: 21}
+struct = %RunElixir.Profile{name: "Peter", age: 21}
 
 # You can access the struct's fields using the dot-notation
 struct.name |> IO.inspect(label: 1)
@@ -37,25 +37,25 @@ struct.status |> IO.inspect(label: 2)
 Structs give you some nice checks for free, like an exception if you try to set a field that doesn't exist.
 
 ```elixir
-struct = %ElixirByExample.Profile{height: 190}
+struct = %RunElixir.Profile{height: 190}
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
 ** (KeyError) key :height not found
-    expanding struct: ElixirByExample.Profile.__struct__/1
+    expanding struct: RunElixir.Profile.__struct__/1
 ```
 
 Structs can also require fields and raise if they are not set.
 
 ```elixir
-struct = %ElixirByExample.Profile{age: 21}
+struct = %RunElixir.Profile{age: 21}
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-** (ArgumentError) the following keys must also be given when building struct ElixirByExample.Profile: [:name]
-    expanding struct: ElixirByExample.Profile.__struct__/1
+** (ArgumentError) the following keys must also be given when building struct RunElixir.Profile: [:name]
+    expanding struct: RunElixir.Profile.__struct__/1
 ```

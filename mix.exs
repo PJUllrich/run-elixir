@@ -1,4 +1,4 @@
-defmodule ElixirByExample.MixProject do
+defmodule RunElixir.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/PJUllrich/run-elixir"
@@ -34,7 +34,7 @@ defmodule ElixirByExample.MixProject do
   defp package do
     [
       maintainers: ["Peter Ullrich"],
-      description: "An introduction to Elixir through examples",
+      description: "An quickstart guide to Elixir through examples",
       licenses: ["MIT"],
       links: %{"GitHub" => @source_url}
     ]
