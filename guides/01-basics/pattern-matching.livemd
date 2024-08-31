@@ -2,7 +2,7 @@
 
 Pattern matching is extremely powerful in Elixir and you'll use it all the time. Let's see some examples:
 
-## Against Basic Types
+## Match against Basic Types
 
 ```elixir
 # You can match against many data structures, like a map.
@@ -15,8 +15,8 @@ IO.inspect([age, name], label: 1)
 IO.inspect([a, c], label: 2)
 
 # Or a Keyword list, but you can't match partially either.
-[a: a, b: b, c: c] = [a: 1, b: 2, c: 3]
-IO.inspect([a, b, c], label: 3)
+[a: a, b: _b, c: c] = [a: 1, b: 2, c: 3]
+IO.inspect([a, c], label: 3)
 
 # Or a list, but again, not partially.
 [a, b, _] = [1, 2, 3]
@@ -33,13 +33,58 @@ IO.inspect(tail, label: "5 - tail")
 ```
 1: [32, "Peter"]
 2: [1, 3]
-3: [1, 2, 3]
+3: [1, 3]
 4: [1, 2]
 5 - head: 1
 5 - tail: [2, 3]
 ```
 
-## In Functions
+### Caveat: Matching against empty Maps
+
+Watch out if you want to match against an empty map, because Elixir will match any map with an empty map, even if the map isn't empty.
+
+```elixir
+map_empty? = fn
+  %{} -> true
+  _ -> false
+end
+
+map_empty?.(%{}) |> IO.inspect(label: "1 - empty")
+map_empty?.(%{a: 1, b: 2}) |> IO.inspect(label: "1 - not empty")
+
+# You can either use the 'map_size/1' guard
+
+map_empty_guard? = fn
+  map when map_size(map) == 0 -> true
+  _ -> false
+end
+
+map_empty_guard?.(%{}) |> IO.inspect(label: "2 - empty")
+map_empty_guard?.(%{a: 1, b: 2}) |> IO.inspect(label: "2 - not empty")
+
+# Or a comparison to match against an empty map
+
+map_empty_comparison? = fn
+  map when map == %{} -> true
+  _ -> false
+end
+
+map_empty_comparison?.(%{}) |> IO.inspect(label: "3 - empty")
+map_empty_comparison?.(%{a: 1, b: 2}) |> IO.inspect(label: "3 - not empty")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1 - empty: true
+1 - not empty: true
+2 - empty: true
+2 - not empty: false
+3 - empty: true
+3 - not empty: false
+```
+
+## Match in Function Clauses
 
 ```elixir
 # You can match (partially) in function clauses:
@@ -70,19 +115,21 @@ end
 4: 30
 ```
 
-## In Strings
+## Match against Strings
 
 ```elixir
 # You can match against the end of a string
 "My name is " <> name = "My name is Batman"
+
 IO.inspect(name, label: 1)
 
 # Or you can match against specific bytes
 #
-# This is extremely useful for deconstructing a string into fixed-sized byte chunks.
-# For example, to implement a communicationi protocol for which you know that
+# This is extremely useful for deconstructing a string into fixed-size byte chunks.
+# For example, to implement a communication protocol for which you know that
 # the first 3 bytes are one argument, and the next 8 bytes are the second, and so on.
 <<article::binary-size(3), _space::binary-size(1), name::binary-size(6), rest::binary>> = "The Batman is my name"
+
 IO.inspect(article, label: "2 - article")
 IO.inspect(name, label: "2 - name")
 IO.inspect(rest, label: "2 - rest")
@@ -92,7 +139,8 @@ IO.inspect(rest, label: "2 - rest")
 
 ```
 1: "Batman"
-2 - head: "Batman"
+2 - article: "The"
+2 - name: "Batman"
 2 - rest: " is my name"
 ```
 

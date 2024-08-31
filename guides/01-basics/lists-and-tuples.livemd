@@ -17,7 +17,7 @@ You can access elements in various ways:
 ```elixir
 details = ["Peter", 32, 190.47, true, :active]
 
-# Returns the 2nd element, because lists are 0-based.
+# Get the 2nd element, because lists are 0-based.
 Enum.at(details, 1) |> IO.inspect(label: 1)
 
 # Get the last element with a negative index
@@ -30,7 +30,7 @@ List.last(details) |> IO.inspect(label: 4)
 # Update an element at a specific index
 List.replace_at(details, 1, 30) |> IO.inspect(label: 5)
 
-# Prepend a new value to the list
+# Prepend a value to the list
 [:adult | details] |> IO.inspect(label: 6)
 
 # Concatenate two lists
@@ -39,7 +39,7 @@ details ++ [nil, 123] |> IO.inspect(label: 7)
 # Delete the first occurrence of an element
 List.delete(details, 32) |> IO.inspect(label: 8)
 
-# Or delete an element at a specific index
+# Delete an element at a specific index
 List.delete_at(details, -1) |> IO.inspect(label: 9)
 ```
 
@@ -90,4 +90,4 @@ tuple_size(hobbies) |> IO.inspect(label: 5)
 5: 3
 ```
 
-If you look closely at the output above, you'll see that although we update and append elements to our tuple, the original `hobbies` variable is not modified; instead, every function call returns a copy of the input variable.
+If you look closely at the output above, you'll see that although we update and append elements to our tuple, the original `hobbies` variable is not modified. In Elixir, variables are immutable and every function call returns a copy of the input variable instead of a modified version of the original variable.

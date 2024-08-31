@@ -23,7 +23,7 @@ Keyword.get(keyword, :age) |> IO.inspect(label: 3)
 # Replace an existing value with a new one
 Keyword.replace(keyword, :age, 33) |> IO.inspect(label: 6)
 
-# When you update a duplicate key, it will only keep the new value and remove the rest
+# But when you update a duplicate key, it will only keep the new value and remove the rest
 Keyword.replace(keyword, :name, "Pieter") |> IO.inspect(label: 7)
 
 # Delete all pairs that have a given key

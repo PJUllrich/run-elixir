@@ -17,7 +17,7 @@ defp deps do
     {:oban, github: "sorentwo/oban"},
     # Or from a Git repo
     {:prom_ex, git: "https://github.com/akoutmos/prom_ex.git"}
-    # Or from a local path (commented out because it doesn't exist, of course)
+    # Or from a local path (commented out because it doesn't exist)
     # {:your_lib, path: "../relative/path/to/your/lib"}
   ]
 end
@@ -38,4 +38,4 @@ iex> Req.get!("https://icanhazdadjoke.com", headers: [accept: "text/plain"]).bod
 "I think circles are pointless."
 ```
 
-And that's it! You've successfully added and tested a library now :)
+And that's it! You've successfully added and tested a library :)

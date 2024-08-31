@@ -1,6 +1,6 @@
-# RunElixir - A Quickstart to the Elixir programming language
+# RunElixir - A Quickstart Guide to Elixir
 
-This project intends to be a 30min quickstart to the [Elixir](elixir-lang.org) programming language.
+This project intends to give a 30min quickstart to the [Elixir](elixir-lang.org) programming language.
 
 You can find the latest version at [RunElixir.com](https://runelixir.com)
 

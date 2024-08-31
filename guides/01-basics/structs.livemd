@@ -1,18 +1,17 @@
 # Structs
 
-A `Struct` is an extension of a `Map` and is defined inside a `Module`. It allows you to define the fields of a map at compile-time and raises if you try to set a field that doesn't exist. You can define a struct with `defstruct/1`.
+A `Struct` is an extension of a `Map` and is defined inside a `Module`. It allows you to define fields at compile-time, require certain fields, set default values, and it raises if you try to set a field that doesn't exist. You can define a struct with `defstruct/1`.
 
 ```elixir
 defmodule RunElixir.Profile do
-  # You can make fields required with this attribute
+  # Make the :name field required
   @enforce_keys [:name]
-  defstruct [:name, :age, status: :active] # <- We set a default value for :status here.
+  defstruct [:name, :age, status: :active] # <- Set the default value of :status to :active
 
-  @legal_age 18
-
-  # You can match against the struct fields in your function definition.
+  # You can match against the struct like this.
+  # This function raises if it receives a plain map and not a struct.
   def adult?(%RunElixir.Profile{age: age}) do
-    age >= @legal_age
+    age >= 18
   end
 end
 ```

@@ -27,10 +27,14 @@ elixir -v
 
 If you want to run the following code yourself, there are three options:
 
-1. Start an IEx REPL with `iex -S mix` and copy and paste the code into the command line.
-2. Copy and paste the code into an Elixir script file, like `script.exs`, and run `mix run script.exs`.
-3. **Recommended**: Install [Livebook](https://livebook.dev/) and simply click the `Run in Livebook` button above each file to open it in an interactive notebook.
+1. **Recommended**: Install [Livebook](https://livebook.dev/) and simply click the `Run in Livebook` button above each file to open it in an interactive notebook.
+1. Start an Elixir REPL with `iex -S mix` and copy and paste the code into the command line.
+1. Copy and paste the code into an Elixir script file, like `script.exs`, and run `mix run script.exs`.
 
 ## Let's begin!
 
-Let's get started: [Learn how to write 'Hello World'](guides/01-basics/hello-world.livemd)
+> #### Tip {: .tip}
+>
+> You can navigate through the pages with the `left` and `right` arrow
+
+Let's begin: [Learn how to write 'Hello World'](guides/01-basics/hello-world.livemd)

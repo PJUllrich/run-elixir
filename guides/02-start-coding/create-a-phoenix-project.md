@@ -62,4 +62,6 @@ You should now see an empty list of ToDos. Just click on `New To do` to add your
 
 You might wonder why you don't see page reloads when you add or remove todos. That's because we use [Phoenix LiveView](https://hexdocs.pm/phoenix_live_view), which allows us to write reactive but server-rendered frontends in pure Elixir!
 
-Check out the [Phoenix LiveView docs](https://hexdocs.pm/phoenix_live_view/welcome.html) to learn more or watch the creator of Phoenix, Chris McCord, build a real-time Twitter clone in just 15 minutes on [YouTube](https://www.youtube.com/watch?v=MZvmYaFkNJI).
+Check out the [Phoenix LiveView docs](https://hexdocs.pm/phoenix_live_view/welcome.html) to learn more or watch the creator of Phoenix, Chris McCord, build a real-time Twitter clone in just 15:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MZvmYaFkNJI?si=5TzKSbh-Ii-FWOfr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

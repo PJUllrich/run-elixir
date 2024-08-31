@@ -50,7 +50,7 @@ defmodule RunElixir.MixProject do
       extra_section: "Guides",
       api_reference: false,
       extras: [
-        "guides/welcome.md",
+        "guides/welcome.livemd",
         "guides/01-basics/hello-world.livemd",
         "guides/01-basics/lists-and-tuples.livemd",
         "guides/01-basics/maps.livemd",
@@ -62,7 +62,6 @@ defmodule RunElixir.MixProject do
         "guides/01-basics/pattern-matching.livemd",
         "guides/01-basics/control-flow.livemd",
         "guides/01-basics/loops.livemd",
-        "guides/02-start-coding/install-elixir.md",
         "guides/02-start-coding/create-a-phoenix-project.md",
         "guides/02-start-coding/install-dependencies.md",
         "guides/02-start-coding/deploy-your-project.md",
@@ -78,7 +77,20 @@ defmodule RunElixir.MixProject do
         "Start Coding": [~r"/02-start-coding/"],
         "Next Steps": [~r"/03-next-steps/"],
         "Advanced Topics": [~r"/04-advanced-topics/"]
-      ]
+      ],
+      before_closing_body_tag: &before_closing_body_tag/1
     ]
   end
+
+  defp before_closing_body_tag(:html) do
+    key_navigation_script = File.read!("./assets/key-navigation.js")
+
+    """
+    <script>
+      #{key_navigation_script}
+    </script>
+    """
+  end
+
+  defp before_closing_body_tag(:epub), do: ""
 end

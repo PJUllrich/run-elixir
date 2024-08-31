@@ -11,7 +11,7 @@ defmodule Watcher do
   end
 
   def init(_args) do
-    {:ok, watcher_pid} = FileSystem.start_link(dirs: ["./guides", "./mix.exs"])
+    {:ok, watcher_pid} = FileSystem.start_link(dirs: ["./guides", "./assets", "./mix.exs"])
     FileSystem.subscribe(watcher_pid)
     {:ok, %{watcher_pid: watcher_pid}}
   end

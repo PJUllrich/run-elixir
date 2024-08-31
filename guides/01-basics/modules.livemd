@@ -6,14 +6,13 @@ Here's how you define a module:
 
 ```elixir
 defmodule RunElixir.Profile do
-  @moduledoc "This is the Profile module."
 
   # This is a 'Module Attribute'. It is a constant value that is set at compile time.
   # You cannot access it from outside the module.
   @legal_age 18
 
-  # If you need to access module attributes outside the module, it is common to write
-  # a little public function that only returns the value:
+  # But if you need to access the module attribute from outside the module,
+  # it is common to write a small public function that returns it:
   def legal_age, do: @legal_age
 
   # This is a public function. You can call it from outside the module.
@@ -47,4 +46,50 @@ RunElixir.Profile.adult?(-1)
 2: false
 ** (RuntimeError) Invalid age -1
     #cell:ephnppjvminxbiag:13: RunElixir.Profile.adult?/1
+```
+
+## `alias/2`, `import/2`, and `defdelegate/2`
+
+You can call the functions of a module from another module in a few ways:
+
+```elixir
+defmodule RunElixir.Checker do
+
+  # Either you call the module using its full namespace:
+  def check_age(profile) do
+    RunElixir.Profile.adult?(profile.age)
+  end
+
+  # Or, you alias its name:
+  alias RunElixir.Profile # <- This and import usually go to the top of the module.
+
+  def check_age_aliased(profile) do
+    Profile.adult?(profile.age)
+  end
+
+  # Or, you import specific or all functions:
+  import RunElixir.Profile, only: [adult?: 1] # Remove the 'only: ...' to import all functions
+
+  def check_age_imported(profile) do
+    adult?(profile.age)
+  end
+
+  # You can also delegate a function call to another module
+  # You can't change the arguments, but you can change the function name.
+  defdelegate check_adult?(age), to: RunElixir.Profile, as: :adult?
+end
+
+RunElixir.Checker.check_age(%{age: 18}) |> IO.inspect(label: 1)
+RunElixir.Checker.check_age_aliased(%{age: 18}) |> IO.inspect(label: 2)
+RunElixir.Checker.check_age_imported(%{age: 18}) |> IO.inspect(label: 3)
+RunElixir.Checker.check_adult?(18) |> IO.inspect(label: 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: true
+2: true
+3: true
+4: true
 ```

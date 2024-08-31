@@ -2,10 +2,11 @@
 
 Since Elixir is a *functional* programming language, functions are first-class citizens and the foundation for everything you build. You already saw how to define a function inside a module, but let's elaborate on this a bit.
 
-You can define multiple function "clauses" which match against certain values. Function clauses are evaluated top-to-bottom, so the function clause at the top is evaluated first, and if it doesn't match, the second function clause is evaluated, and so on. If one function matches, all functions that come after are ignored.
+You can define multiple function "clauses" that match against certain values. Function clauses are evaluated top-to-bottom, so the function clause at the top is evaluated first. If it doesn't match, the second function clause is evaluated, and so on. If one function matches, all functions that come thereafter are ignored.
 
 ```elixir
 defmodule RunElixir.Checker do
+
   # This clause will be evaluated first.
   # It matches against integer values from 18 to 150.
   # The >= and <= operators are called 'Guards'.
@@ -62,7 +63,7 @@ If you want to define a default value for multiple function clauses, you need to
 defmodule RunElixir.ProfileChecker do
   @legal_age 18
 
-  # This is the function head which defines the default value and has no body.
+  # This is the function head which defines the default value for all clauses. It has no body.
   def adult?(age, legal_age \\ @legal_age)
 
   def adult?(age, legal_age) when age >= legal_age do
@@ -75,18 +76,29 @@ defmodule RunElixir.ProfileChecker do
 
   def adult?(age, _legal_age), do: raise("Invalid age: #{age}")
 end
+
+# Again, you can either use the default value or overwrite it when you call the function:
+RunElixir.ProfileChecker.adult?(18) |> IO.inspect(label: 1)
+RunElixir.ProfileChecker.adult?(18, 21) |> IO.inspect(label: 2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: true
+2: false
 ```
 
 ## Function Arity
 
-Functions have an `arity`, which describes how many arguments they have. For example, our `adult?` function has an arity of `2` because it expects two input arguments, so you would identify the function as `adult?/2`.
+Functions have an `arity`, which describes how many arguments they expect. For example, our `adult?` function has an arity of `2` because it expects two input arguments, so you would identify the function as `adult?/2`.
 
 However, one of the arguments has a default value, so we actually define two functions, one with an arity of `1` (plus the default value but it doesn't count) and one with an arity of `2` if we overwrite the default value.
 
 If you list all functions of the `Profile` module, you'd see that it has two `adult?` functions:
 
 ```elixir
-RunElixir.ProfileChecker.__info__(:functions)
+RunElixir.Profile.__info__(:functions)
 ```
 
 <!-- livebook:{"output":true} -->
@@ -111,22 +123,27 @@ ran.() |> IO.inspect(label: 2)
 # around variables defined in the same scope and use them later.
 value = 20
 lazy_evaluate = fn div -> value * 10.0e10 / div end
-
 lazy_evaluate.(2048) |> IO.inspect(label: 3)
 
-# A shorthand notation for anonymous functions
+# Even if you change the local variable after you define the anonymous function,
+# the function will keep the old value.
+value = 30
+lazy_evaluate.(2048) |> IO.inspect(label: 4)
+
+# A shorthand notation for anonymous functions:
 # &1 is the first argument, &2 the second, and so on.
 fun = &(&1 + &2)
-fun.(4, 5) |> IO.inspect(label: 4)
+fun.(4, 5) |> IO.inspect(label: 5)
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
 1: 3
-2: 37
+2: 20
 3: 976562500.0
-4: 9
+4: 976562500.0
+5: 9
 ```
 
 You can assign an anonymous function to a variable and pass it around as an argument too. This comes in handy if you work with callbacks. In this example, we fetch a dad joke from an API using the HTTP library [Req](https://hexdocs.pm/req) and execute the callback function with the response.
@@ -148,11 +165,11 @@ defmodule RunElixir.Jokes do
 end
 ```
 
-You can pass in the callback function like this:
+Now, let's see how you can pass an anonymous function as an argument.
 
 ```elixir
 callback_fn = fn
-  # You can define multiple function clauses for an anonymous function like this:
+  # You can define multiple function clauses also in anonymous functions:
   %Req.Response{status: 200, body: joke} -> IO.inspect("Here's a dad joke for you: #{joke}")
   %Req.Response{status: status, body: message} -> IO.inspect("Oh no! An error occurred #{status} - #{message}")
 end
@@ -213,4 +230,22 @@ fun.(17) |> IO.inspect(label: 3)
 1: nil
 2: :adult
 3: nil
+```
+
+The only exception to this is if a function raises an exception. In that case, the rest of the function is not executed:
+
+```elixir
+raises = fn ->
+  raise "Boom"
+
+  :return_something
+end
+
+raises.() |> IO.inspect()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+** (RuntimeError) Boom
 ```

@@ -160,7 +160,7 @@ defmodule RunElixir.Permissions do
   end
 
   # Moving each step into a small helper function gives you the flexibility
-  # to decide inside the function which error to return.
+  # to decide which error to return inside the function.
   defp get_age(details) do
     case details do
       %{age: age} when is_integer(age) -> {:ok, age}

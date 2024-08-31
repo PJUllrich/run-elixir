@@ -1,6 +1,6 @@
 # Maps
 
-Associative data structures are able to associate a key to a certain value. You might know them as dictionary, map, hash table, key-value store, etc. Elixir has two main structures: Maps and Keyword Lists. Let's first talk about Maps.
+Elixir has two "associative data structures": Maps and Keyword Lists. You might know them as dictionary, map, hash table, key-value store, etc. Let's first look at Maps.
 
 A `Map` is a key-value store that can contain any value as a key.
 
@@ -14,14 +14,17 @@ map.hello |> IO.inspect(label: 1)
 map[32] |> IO.inspect(label: 2)
 map["height"] |> IO.inspect(label: 3)
 
+# Or use a helper function
+Map.get(map, 32) |> IO.inspect(label: 4)
+
 # A `nil` is returned if the key does not exist
-map["foo"] |> IO.inspect(label: 4)
+map["foo"] |> IO.inspect(label: 5)
 
 # Delete one key from the map
-Map.delete(map, :hello) |> IO.inspect(label: 5)
+Map.delete(map, :hello) |> IO.inspect(label: 6)
 
 # Or delete multiple keys at once
-Map.drop(map, [:hello, 32]) |> IO.inspect(label: 6)
+Map.drop(map, [:hello, 32]) |> IO.inspect(label: 7)
 ```
 
 <!-- livebook:{"output":true} -->
@@ -30,9 +33,10 @@ Map.drop(map, [:hello, 32]) |> IO.inspect(label: 6)
 1: "World!"
 2: :age
 3: 190.47
-4: nil
-5: %{32 => :age, "height" => 190.47}
-6: %{"height" => 190.47}
+4: :age
+5: nil
+6: %{32 => :age, "height" => 190.47}
+7: %{"height" => 190.47}
 ```
 
 ### Maps with Atom keys
@@ -100,9 +104,9 @@ Lastly, there is a shorthand notation which comes in handy if you don't want to 
 ```elixir
 map = %{age: 32, name: "Peter"}
 
-# This shorthand notation also updates existing keys:
+# The shorthand notation only updates existing keys:
 %{map | age: 33, name: "Pietah"} |> IO.inspect(label: 1)
-# But it raises an error too if the key does not exist
+# And raises if the key does not exist
 %{map | height: 190.47}
 ```
 
