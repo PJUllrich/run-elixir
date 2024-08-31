@@ -1,10 +1,6 @@
 # Hello World!
 
-If you want to run the following code yourself, there are three options:
 
-1. Start an IEx REPL with `iex -S mix` and copy and paste the code into the command line.
-2. Copy and paste the code into an Elixir script file, like `script.exs`, and run `mix run script.exs`.
-3. **Recommended**: Install [Livebook](https://livebook.dev/) and simply click the `Run in Livebook` button above each file to open it in an interactive notebook.
 
 ## Hello World
 
@@ -27,20 +23,18 @@ Assigning a value to a variable is super simple in Elixir. You just write `my_va
 ```elixir
 name = "Peter" # String
 age = 32 # Integer
-age_hex = 0x20 # Integer in hexadecimal
 height = 190.47 # Float
-height_sci = 1.9047e2 # Float in scientific notation
 adult? = true # Boolean
 status = :active # Atom
 address = nil # The 'None/null/Nil' value
 
-IO.inspect([name, age, age_hex, height, height_sci, adult?, status, address])
+IO.inspect([name, age, height, adult?, status, address])
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-["Peter", 32, 32, 190.47, 190.47, true, :active, nil]
+["Peter", 32, 190.47, true, :active, nil]
 ```
 
 Variables are **immutable** but can be reassigned. This means that the memory holding the old value will not be overwritten; instead, new memory is allocated to hold the new value while the old value remains until garbage collected. Even if you modify a variable, it is not updated in place but copied to a new chunk of memory. This might seem wasteful, but it prevents different processes from modifying the same variable.

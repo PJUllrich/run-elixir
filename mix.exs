@@ -27,7 +27,8 @@ defmodule RunElixir.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.34.2", only: :dev, runtime: false},
-      {:publishex, "~> 1.0.1", only: :dev, runtime: false}
+      {:publishex, "~> 1.0.1", only: :dev, runtime: false},
+      {:file_system, "~> 1.0", only: :dev, runtime: false}
     ]
   end
 
@@ -42,14 +43,14 @@ defmodule RunElixir.MixProject do
 
   defp docs do
     [
-      main: "readme",
+      main: "welcome",
       source_url: @source_url,
       # assets: %{"notebooks/files" => "files"},
       # logo: "images/scholar_simplified.png",
       extra_section: "Guides",
       api_reference: false,
       extras: [
-        "README.md",
+        "guides/welcome.md",
         "guides/01-basics/hello-world.livemd",
         "guides/01-basics/lists-and-tuples.livemd",
         "guides/01-basics/maps.livemd",
@@ -70,11 +71,6 @@ defmodule RunElixir.MixProject do
         "guides/03-next-steps/stay-informed.md",
         "guides/03-next-steps/find-a-job.md",
         "guides/03-next-steps/find-libraries.md",
-        "guides/04-advanced-topics/async.livemd",
-        "guides/04-advanced-topics/behaviours-and-protocols.livemd",
-        "guides/04-advanced-topics/http.livemd",
-        "guides/04-advanced-topics/logger.livemd",
-        "guides/04-advanced-topics/macros.livemd",
         "guides/04-advanced-topics/big-o.livemd"
       ],
       groups_for_extras: [

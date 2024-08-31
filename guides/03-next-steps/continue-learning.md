@@ -18,6 +18,7 @@ The following list is non-exhaustive and has no particular order.
 * [Alchemist Camp](https://alchemist.camp/)
 * [TechSchool](https://techschool.dev/en/courses)
 * [LearnElixir](https://learn-elixir.dev)
+* [Phoenix LiveView](https://phoenixliveview.com/)
 * [Grox.io](https://grox.io/)
 
 ## Interactive Guides
