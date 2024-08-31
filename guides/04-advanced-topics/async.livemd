@@ -1,0 +1,173 @@
+# Async
+
+Working with asynchronous processes is Elixir's strong suit because it builds on top of the ~40-year-old virtual machine of Erlang, the [BEAM](https://en.wikipedia.org/wiki/BEAM_(Erlang_virtual_machine)). The BEAM was originally designed in the telecommunication industry and was optimised for parallelism instead of raw speed. It was meant to handle massive amounts of simultaneous connections with high fault tolerance and availability.
+
+That's why the BEAM, and therefore Elixir, comes with a rich set of asynchronous features. They all revolve around a `Process` and the [Actor Model](https://akoutmos.com/post/actor-model-genserver-app/). BEAM [processes](https://www.erlang.org/doc/system/eff_guide_processes.html#content) are lightweight with a small memory footprint (~7kb per process), are fast to start and stop, and efficient to schedule. Every process has its own heap and doesn't share memory with other processes. All [communication between processes](https://www.erlang.org/doc/system/eff_guide_processes.html#sending-messages) happens through messages, and each process has its own mailbox. With small exceptions, "sending" a message means that the sending process copies the message into the receiving process' mailbox. The receiving process checks its mailbox in a loop and handles new messages separately.
+
+Let's start with the simplest way to start an async process: `spawn/1`.
+
+## `spawn/1`
+
+The `spawn/1` function is a quick fire-and-forget way to start an asynchronous process.
+
+```elixir
+fun = fn ->
+  # spawn/1 takes an anonymous function and
+  # returns the Process Identifier (PID) of the new process.
+  #
+  # A crash in the spawned process doesn't impact the spawning process.
+  pid =
+    spawn(fn ->
+      IO.inspect("I'm alive!")
+      raise "BOOM!"
+    end)
+
+  IO.inspect("Started #{inspect(pid)}")
+  :timer.sleep(1)
+  IO.inspect("Still alive 😎")
+end
+
+fun.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"Started #PID<0.171.0>"
+"I'm alive!"
+** (RuntimeError) BOOM!
+"Still alive 😎"
+```
+
+You can `link` two processes if you want both to die if one of them dies. So, if a parent process spawns a child process and we link them, the parent dies if the child process dies and vice versa. To *"die"* in this context means that one process sends an `:EXIT` message to the other process that contains an exit reason other than `:normal`.
+
+```elixir
+fun = fn ->
+  # Start a parent process unlinked to the outer process,
+  # but linked to its child. When the child dies,
+  # the parent dies too, but the outer process is unaffected.
+  pid =
+    spawn(fn ->
+      IO.inspect("Parent is alive! Spawning child...")
+      spawn_link(fn -> raise "BOOM!" end)
+      :timer.sleep(1) # <- Wait for the child to start.
+      IO.inspect("Parent is still here!") # <- Will not execute
+    end)
+
+  IO.inspect("Started parent at #{inspect(pid)}")
+  :timer.sleep(1)
+  IO.inspect("Still alive 😎")
+end
+
+fun.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"Started parent at #PID<0.215.0>"
+"Parent is alive! Spawning child..."
+** (RuntimeError) BOOM!
+"Still alive 😎"
+```
+
+## `Task`
+
+Usually, you wouldn't work with `spawn/1` directly but use the `Task` module instead. It offers a range of helper functions for spawning one-off tasks.
+
+```elixir
+# Use `Task.start/1` instead of `spawn/1` to start an unlinked process
+# and `Task.start_link/1` instead of `spawn_link/1` to start a linked one.
+fun = fn ->
+  {:ok, pid} =
+    Task.start(fn ->
+      IO.inspect("Parent Task started!")
+      Task.start_link(fn -> raise "BOOM!" end)
+      :timer.sleep(1)
+      IO.inspect("Parent Task is still alive!")
+    end)
+
+  IO.inspect("Parent started at #{inspect(pid)}")
+  :timer.sleep(1)
+  IO.inspect("Still alive 😎")
+end
+
+fun.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"Unlinked Task started!"
+
+"Parent started at #PID<0.232.0>"
+"Parent Task started!"
+** (RuntimeError) BOOM!
+"Still alive 😎"
+```
+
+### `Task.async/1` and `Task.await/1`
+
+A big advantage of using `Task` over `spawn/1` is that you can easily await the result of the async process using the common `async/await` notation.
+
+```elixir
+fun = fn ->
+  pid =
+    Task.async(fn ->
+      IO.inspect("Starting to 'work'", label: NaiveDateTime.utc_now())
+      :timer.sleep(500)
+      :some_result
+    end)
+
+  IO.inspect("Starting to wait", label: NaiveDateTime.utc_now())
+  result = Task.await(pid, :timer.seconds(1)) # Wait up to 1 second
+  IO.inspect("Task returned: #{result}", label: NaiveDateTime.utc_now())
+end
+
+fun.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2024-08-31 14:58:11.501058: "Starting to wait"
+2024-08-31 14:58:11.501163: "Starting to 'work'"
+2024-08-31 14:58:12.002522: "Task returned: some_result"
+```
+
+Keep in mind that calling `await/1` in the awaiting process will block the process until the awaited process returns a value or until the timeout is reached (5 seconds by default). If the timeout is reached, both processes will die 💀
+
+### `Task.async_stream/3`
+
+You can easily apply an operation to a list of elements and collect the result in parallel by using `Task.async_stream/3`.
+
+```elixir
+elements = ["elixir", "is", "great"]
+
+# Count the characters in each word and return the overall sum.
+#
+# Task.async_stream/3 runs as many tasks as you have schedulers in parallel.
+# This defaults to the number of available CPUs. Each task applies
+# the function to only one element and returns the result.
+elements
+|> Task.async_stream(fn word -> String.length(word) end)
+|> Enum.reduce(0, fn {:ok, count}, acc -> count + acc end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+13
+```
+
+**Take a second and look at this again.**
+
+In just 3 lines of code we parallelized a task over all available CPUs! 🤯
+
+## `GenServer`
+
+## `Supervisor`
+
+## `Agent`
+
+https://github.com/Arp-G/async-elixir

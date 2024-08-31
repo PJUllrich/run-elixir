@@ -1,3 +1,0 @@
-# Async
-
-TODO: Explain the basic concepts of async in Elixir. Mention `Task`, `spawn/1`, `GenServer`, `Agent`.

@@ -70,7 +70,8 @@ defmodule RunElixir.MixProject do
         "guides/03-next-steps/stay-informed.md",
         "guides/03-next-steps/find-a-job.md",
         "guides/03-next-steps/find-libraries.md",
-        "guides/04-advanced-topics/big-o.livemd"
+        "guides/04-advanced-topics/big-o.livemd",
+        "guides/04-advanced-topics/async.livemd"
       ],
       groups_for_extras: [
         "The Basics": [~r"/01-basics/"],
@@ -78,9 +79,18 @@ defmodule RunElixir.MixProject do
         "Next Steps": [~r"/03-next-steps/"],
         "Advanced Topics": [~r"/04-advanced-topics/"]
       ],
+      before_closing_head_tag: &before_closing_head_tag/1,
       before_closing_body_tag: &before_closing_body_tag/1
     ]
   end
+
+  defp before_closing_head_tag(:html) do
+    """
+    <script defer data-domain="runelixir.com" src="https://plausible.io/js/script.js"></script>
+    """
+  end
+
+  defp before_closing_head_tag(:epub), do: ""
 
   defp before_closing_body_tag(:html) do
     key_navigation_script = File.read!("./assets/key-navigation.js")
