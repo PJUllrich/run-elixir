@@ -1,0 +1,95 @@
+# Task
+
+Usually, you wouldn't work with `spawn/1` directly but use the `Task` module instead. It offers a range of helper functions for spawning one-off tasks.
+
+```elixir
+# Use `Task.start/1` instead of `spawn/1` to start an unlinked process
+# and `Task.start_link/1` instead of `spawn_link/1` to start a linked one.
+fun = fn ->
+  {:ok, pid} =
+    Task.start(fn ->
+      IO.inspect("Parent Task started!")
+      Task.start_link(fn -> raise "BOOM!" end)
+      :timer.sleep(1)
+      IO.inspect("Parent Task is still alive!") # <- Won't execute
+    end)
+
+  IO.inspect("Parent started at #{inspect(pid)}")
+  :timer.sleep(1)
+  IO.inspect("Still alive 😎")
+end
+
+fun.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"Parent started at #PID<0.232.0>"
+"Parent Task started!"
+** (RuntimeError) BOOM!
+"Still alive 😎"
+```
+
+### `Task.async/1` and `Task.await/1`
+
+A big advantage of using `Task` over `spawn/1` is that you can easily await the result of the async process using the common `async/await` notation.
+
+```elixir
+fun = fn ->
+  pid =
+    Task.async(fn ->
+      IO.inspect("Task starts work", label: NaiveDateTime.utc_now())
+      :timer.sleep(500)
+      :some_result
+    end)
+
+  IO.inspect("Starting other work", label: NaiveDateTime.utc_now())
+  :timer.sleep(200) # <- Do some other work
+  IO.inspect("Finished other work", label: NaiveDateTime.utc_now())
+
+  # Whenever you're ready, you can await the result.
+  result = Task.await(pid, :timer.seconds(1)) # Wait up to 1 second
+  IO.inspect("Task returned: #{result}", label: NaiveDateTime.utc_now())
+end
+
+fun.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2024-08-31 15:35:17.500386: "Starting other work"
+2024-08-31 15:35:17.500489: "Task starts work"
+2024-08-31 15:35:17.700461: "Finished other work"
+2024-08-31 15:35:18.000527: "Task returned: some_result"
+```
+
+Keep in mind that calling `await/1` in the awaiting process will block the process until the awaited process returns a value or until the timeout is reached (5 seconds by default). If the timeout is reached, both processes will die 💀
+
+### `Task.async_stream/3`
+
+You can easily apply an operation to a list of elements and collect the result in parallel by using `Task.async_stream/3`.
+
+```elixir
+elements = ["elixir", "is", "great"]
+
+# Count the characters in each word and return the overall sum.
+#
+# Task.async_stream/3 runs as many tasks as you have schedulers in parallel.
+# This defaults to the number of available CPUs. Each task applies
+# the function to only one element and returns the result.
+elements
+|> Task.async_stream(fn word -> String.length(word) end)
+|> Enum.reduce(0, fn {:ok, count}, acc -> count + acc end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+13
+```
+
+**Take a second and look at this again.**
+
+In just 3 lines of code, we parallelised a task over all available CPUs! 🤯

@@ -1,0 +1,93 @@
+# Supervisor
+
+A `Supervisor` allows you to start a predefined list of GenServers and to restart them if they crash. We can also use a `DynamicSupervisor` if we want to start GenServers dynamically and on demand, or a `PartitionSupervisor`, if we wanted to group the supervised GenServers by specific keys. But for this example, we'll focus on the "plain" Supervisor.
+
+Let's first define a simple GenServer that we can start and supervise:
+
+```elixir
+defmodule RunElixir.Buffer do
+  @moduledoc "Implements a naive Last-in-First-out (LIFO) buffer."
+
+  use GenServer
+
+  require Logger
+
+  def start_link(_args), do: GenServer.start_link(__MODULE__, [])
+
+  def push(pid, message), do: GenServer.cast(pid, {:push, message})
+  def pop(pid), do: GenServer.call(pid, :pop)
+
+  # Callbacks
+
+  def init(_args) do
+    Logger.info("Buffer started!")
+    {:ok, []}
+  end
+
+  def handle_cast({:push, message}, state), do: {:noreply, [message | state]}
+  def handle_call(:pop, _from, [message | state]), do: {:reply, message, state}
+end
+```
+
+Now, let's start two buffers using a Supervisor:
+
+```elixir
+children = [
+  %{id: :buffer1, start: {RunElixir.Buffer, :start_link, [nil]}},
+  %{id: :buffer2, start: {RunElixir.Buffer, :start_link, [nil]}},
+]
+
+{:ok, pid} = Supervisor.start_link(children, strategy: :one_for_one)
+
+Supervisor.count_children(pid) |> IO.inspect(label: 1)
+
+Supervisor.which_children(pid) |> IO.inspect(label: 2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+17:08:53.997 [info] Buffer started! # <- Buffer 1 has started
+17:08:53.997 [info] Buffer started! # <- Buffer 2 has started
+1: %{active: 2, workers: 2, supervisors: 0, specs: 2}
+2: [
+  {:buffer2, #PID<0.835.0>, :worker, [RunElixir.Buffer]},
+  {:buffer1, #PID<0.834.0>, :worker, [RunElixir.Buffer]}
+]
+```
+
+We see that the Supervisor started both buffers successfully. Let's try to add and pop some messages from the first buffer.
+
+```elixir
+[{_name, buffer_pid, _type, _module} | _] = Supervisor.which_children(pid)
+
+RunElixir.Buffer.push(buffer_pid, "Hello")
+RunElixir.Buffer.push(buffer_pid, "World")
+RunElixir.Buffer.pop(buffer_pid) |> IO.inspect(label: 1)
+RunElixir.Buffer.pop(buffer_pid) |> IO.inspect(label: 2)
+RunElixir.Buffer.pop(buffer_pid)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: "World"
+2: "Hello"
+
+15:54:56.530 [error] GenServer #PID<0.808.0> terminating
+** (FunctionClauseError) no function clause matching in RunElixir.Buffer.handle_call/3
+
+15:54:56.530 [info] Buffer started!
+```
+
+Oh no! We forgot to handle the case when we try to pop a message from an empty buffer. Thats why the buffer crashed when we tried to pop a third message. Luckily, the Supervisor has got our back and restarted the buffer right away, as you can see in the last log line.
+
+## Strategies
+
+We started our children using the `:one_for_one` strategy, which means that the Supervisor will restart only the crashed GenServer process and won't touch the remaining ones.
+
+We could also use the `:one_for_all` strategy, which would instruct the Supervisor to terminate all remaining processes and then to restart all processes, including the terminated one.
+
+Lastly, we could use the `:rest_for_one` strategy, which means that the Supervisor terminates all process that come *after* the crashed process in the list of children and then restarts the terminated processes, including the crashed one.
+
+You should choose the strategy that fits your use case best, but you'll mostly see the `:one_for_one` strategy "in the wild".

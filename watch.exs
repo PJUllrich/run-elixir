@@ -24,4 +24,4 @@ defmodule Watcher do
 end
 
 {:ok, _pid} = Watcher.start_link([])
-Process.sleep(:infinity)
+System.no_halt(true)

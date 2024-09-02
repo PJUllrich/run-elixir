@@ -1,0 +1,150 @@
+# GenServer
+
+A `GenServer` is what you commonly use for a process that is either long-running or more complex than a simple one-off task. They are arguably the most common method for doing anything asynchronously in Elixir and you'll encounter them all the time. GenServers can easily send and receive messages - also to themselves - keep long-lasting state, and perform background tasks.
+
+```elixir
+defmodule RunElixir.GameState do
+  use GenServer
+
+  require Logger
+
+  # Public functions
+  #
+  # All these functions are executed in the calling process, not the GenServer process.
+
+  # It's common to write a public helper function to a GenServer process,
+  # and required if you start the GenServer from a Supervisor (see next section).
+  #
+  # You can use `GenServer.start/3` or `GenServer.start_link/3` to start a new process.
+  def start_link(args) do
+    # The optional 'name'-option registers the GenServer with a unique name
+    # that can be used to call the GenServer from anywhere. This is useful
+    # for starting Singletons, but will block you from starting more than one
+    # process based on this GenServer. That's why it's good practice to
+    # make the name configurable through the arguments.
+    name = Keyword.get(args, :name, __MODULE__)
+    GenServer.start_link(__MODULE__, args, name: name)
+  end
+
+  # `GenServer.cast/2` sends a message to the GenServer process
+  # and returns `:ok` without waiting for a response.
+  def add_points(name_or_pid \\ __MODULE__, points) do
+    GenServer.cast(name_or_pid, {:add_points, points})
+  end
+
+  # `GenServer.call/2` makes a synchronous call to the GenServer
+  # and waits for a response with a default timeout of 5 seconds.
+  def end_round(name_or_pid \\ __MODULE__), do: GenServer.call(name_or_pid, :end_round)
+  def get_state(name_or_pid \\ __MODULE__), do: GenServer.call(name_or_pid, :get_state)
+
+
+  # Callbacks
+  #
+  # All these functions are executed in the GenServer process.
+
+  @initial_state %{
+    rounds_played: 0,
+    total_points: 0,
+    current_points: 0
+  }
+
+  # This callback is required. It receives the 'args'-variable from
+  # the GenServer.start_link/3 or GenServer.start/3 above and returns
+  # the initial state of the process.
+  #
+  # It can optionally return a third argument with {:continue, tuple_or_atom}
+  # which will be handled asynchronously in the `handle_continue/2` callback.
+  def init(_args), do: {:ok, @initial_state, {:continue, :log_start}}
+
+  # It is good practice to return quickly from `init/1` and to move
+  # heavy workloads into the `handle_continue/2` callback. This way
+  # you don't block whatever starts your GenServer (e.g. your application on startup)
+  # because - unlike `init/1` - this callback is executed asynchronously
+  # to the rest of your system.
+  def handle_continue(:log_start, state) do
+    Logger.info("GameState has started!")
+    {:noreply, state}
+  end
+
+  # This callback handles the `cast/2`-call from above.
+  # It does not return a value to the calling process.
+  #
+  # All callbacks will receive and may modify the process state
+  # but have to return something as the new process state
+  # which will then be passed into the next callback.
+  # In this case, we simply return the current state.
+  def handle_cast({:add_points, new_points}, state) do
+    state = Map.update!(state, :current_points, fn points -> points + new_points end)
+    {:noreply, state}
+  end
+
+  # These callbacks handle the `call/2`-calls from above.
+  # You can define callbacks multiple times and match
+  # against the arguments from different `call/2` or `cast/2`-calls.
+  #
+  # This one updates the process state and returns
+  # `{:ok, new_state}` to the calling process.
+  def handle_call(:end_round, _from, old_state) do
+    %{
+      rounds_played: rounds_played,
+      total_points: total_points,
+      current_points: current_points
+    } = old_state
+
+    new_state = %{
+      rounds_played: rounds_played + 1,
+      total_points: total_points + current_points,
+      current_points: 0
+    }
+
+    {:reply, {:ok, new_state}, new_state}
+  end
+
+  # This one only returns the state.
+  # Try to minimise fetching the state by always returning the updated state if you modify it,
+  # as we've done in the `handle_call/2` above, because fetching the state repeatedly
+  # blocks both the calling and the called process.
+  def handle_call(:get_state, _from, state), do: {:reply, state, state}
+end
+```
+
+Let's try out our new GameState GenServer!
+
+```elixir
+alias RunElixir.GameState
+
+# Let's start a new GameState process with a custom name.
+{:ok, pid} = GameState.start_link([name: :game])
+
+# We can call the GenServer either with its (atom) name or its PID.
+GameState.get_state(pid) |> IO.inspect(label: 1)
+GameState.add_points(:game, 100) |> IO.inspect(label: 2)
+GameState.end_round(:game) |> IO.inspect(label: 3)
+GameState.get_state(:game) |> IO.inspect(label: 4)
+
+# We can easily start another process, for example, for another player.
+{:ok, pid} = GameState.start_link([name: :new_game])
+GameState.get_state(:new_game) |> IO.inspect(label: 5)
+
+# Or, we can start the GenServer under its module name
+{:ok, _pid} = GameState.start_link([])
+GameState.add_points(50) |> IO.inspect(label: 6)
+GameState.end_round() |> IO.inspect(label: 7)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+14:49:27.607 [info] GameState has started!
+1: %{rounds_played: 0, total_points: 0, current_points: 0}
+2: :ok
+3: {:ok, %{rounds_played: 1, total_points: 100, current_points: 0}}
+4: %{rounds_played: 1, total_points: 100, current_points: 0}
+
+14:49:27.608 [info] GameState has started!
+5: %{rounds_played: 0, total_points: 0, current_points: 0}
+
+14:49:27.608 [info] GameState has started!
+6: :ok
+7: {:ok, %{rounds_played: 1, total_points: 50, current_points: 0}}
+```

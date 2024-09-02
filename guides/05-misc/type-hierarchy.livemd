@@ -1,0 +1,62 @@
+# Basic Type Hierarchy
+
+When you compare basic types in Elixir, they adhere to the following hierarchy. This is important to keep in mind when comparing values with `<` or `>` comparison operators.
+
+This is the order of the basic types for comparisons:
+
+1. Number
+2. Atom
+3. Reference
+4. Function
+5. Port
+6. PID
+7. Tuple
+8. Map
+9. List
+10. String
+
+There are two types on this list that we haven't discussed before: [Reference](https://www.erlang.org/doc/system/data_types.html#reference) and [Port](https://www.erlang.org/doc/system/ports).
+
+A `Reference` is a value that is unique across all connected erlang nodes. So, if you connect multiple nodes/servers into one cluster and call `make_ref()` on any of them, you will always get a unique value back. References are useful for tagging requests and to track them throughou your system. They also come in handy for tagging messages that you send between processes, especially when the response is asynchronous.
+
+```elixir
+make_ref()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Reference<0.2725402356.1941176323.86081>
+```
+
+A `Port` lets you communicate with the "external world", for example with the operating system of the server your Elixir program runs on. You can use it to call functions in other programming languages easily, like [Zig](https://github.com/E-xyza/zigler) or [Rust](https://github.com/rusterlium/rustler).
+
+```
+Port.list()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[#Port<0.0>, #Port<0.1>, #Port<0.3>]
+```
+
+Let's see what that the ordering means in practice:
+
+```elixir
+ref = make_ref()
+port = Port.list() |> hd()
+pid = self()
+
+# A Number is "larger" than an Atom,
+# which is "larger" than a Reference, and so on.
+result = 1 < :atom < ref < port < pid < {:a, :b} < %{a: 1} < [1, 2] < "Elixir"
+
+IO.inspect(result)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+```

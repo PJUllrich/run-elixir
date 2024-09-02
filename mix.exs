@@ -70,14 +70,20 @@ defmodule RunElixir.MixProject do
         "guides/03-next-steps/stay-informed.md",
         "guides/03-next-steps/find-a-job.md",
         "guides/03-next-steps/find-libraries.md",
-        "guides/04-advanced-topics/big-o.livemd",
-        "guides/04-advanced-topics/async.livemd"
+        "guides/04-async/async.livemd",
+        "guides/04-async/spawn.livemd",
+        "guides/04-async/task.livemd",
+        "guides/04-async/genserver.livemd",
+        "guides/04-async/supervisor.livemd",
+        "guides/05-misc/big-o.livemd",
+        "guides/05-misc/type-hierarchy.livemd"
       ],
       groups_for_extras: [
         "The Basics": [~r"/01-basics/"],
         "Start Coding": [~r"/02-start-coding/"],
         "Next Steps": [~r"/03-next-steps/"],
-        "Advanced Topics": [~r"/04-advanced-topics/"]
+        Async: [~r"/04-async/"],
+        Miscellaneous: [~r"/05-misc/"]
       ],
       before_closing_head_tag: &before_closing_head_tag/1,
       before_closing_body_tag: &before_closing_body_tag/1

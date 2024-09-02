@@ -1,0 +1,7 @@
+# Introduction
+
+Working with asynchronous processes is Elixir's strong suit because it builds on top of the ~40-year-old virtual machine of Erlang, the [BEAM](https://en.wikipedia.org/wiki/BEAM_(Erlang_virtual_machine)). The BEAM was originally designed in the telecommunication industry and was optimised for parallelism instead of raw speed. It was meant to handle massive amounts of simultaneous connections with high fault tolerance and availability.
+
+That's why the BEAM, and therefore Elixir, comes with a rich set of asynchronous features. They all revolve around a `Process` and the [Actor Model](https://akoutmos.com/post/actor-model-genserver-app/). BEAM [processes](https://www.erlang.org/doc/system/eff_guide_processes.html#content) are lightweight with a small memory footprint (~7kb per process), fast to start and stop, and efficient to schedule. Every process has its own heap and doesn't share memory with other processes. All [communication between processes](https://www.erlang.org/doc/system/eff_guide_processes.html#sending-messages) happens through messages, and each process has its own mailbox. With small exceptions, "sending" a message means that the sending process copies the message into the receiving process's mailbox. The receiving process checks its mailbox in a loop and handles new messages separately.
+
+Let's start with the simplest way to start an async process: [spawn/1](04-async/spawn.livemd)

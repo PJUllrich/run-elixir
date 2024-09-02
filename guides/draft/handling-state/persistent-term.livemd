@@ -1,0 +1,3 @@
+# persistent_term
+
+TODO: Introduce https://www.erlang.org/doc/apps/erts/persistent_term.html

@@ -1,0 +1,64 @@
+# spawn/1
+
+The `spawn/1` function is a quick fire-and-forget way to start an asynchronous process.
+
+```elixir
+fun = fn ->
+  # spawn/1 takes an anonymous function and
+  # returns the Process Identifier (PID) of the new process.
+  #
+  # A crash in the spawned process doesn't impact the spawning process.
+  pid =
+    spawn(fn ->
+      IO.inspect("I'm alive!")
+      raise "BOOM!"
+    end)
+
+  IO.inspect("Started #{inspect(pid)}")
+  :timer.sleep(1)
+  IO.inspect("Still alive 😎")
+end
+
+fun.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"Started #PID<0.171.0>"
+"I'm alive!"
+** (RuntimeError) BOOM!
+"Still alive 😎"
+```
+
+You can `link` two processes if you want both to die if one of them dies. So, if a parent process spawns a child process and we link them, the parent dies if the child process dies and vice versa. To *"die"* in this context means that one process sends an `:EXIT` message to the other process that contains an exit reason other than `:normal`.
+
+```elixir
+fun = fn ->
+  # Start a parent process unlinked to the outer process,
+  # but linked to its child. When the child dies,
+  # the parent dies too, but the outer process is unaffected.
+  pid =
+    spawn(fn ->
+      IO.inspect("Parent is alive! Spawning child...")
+      spawn_link(fn -> raise "BOOM!" end)
+      :timer.sleep(1) # <- Wait for the child to start.
+      IO.inspect("Parent is still here!") # <- Will not execute
+    end)
+
+  IO.inspect("Started parent at #{inspect(pid)}")
+  :timer.sleep(1)
+  IO.inspect("Still alive 😎")
+end
+
+fun.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"Started parent at #PID<0.215.0>"
+"Parent is alive! Spawning child..."
+** (RuntimeError) BOOM!
+"Still alive 😎"
+```
