@@ -1,6 +1,6 @@
 # Welcome to Elixir!
 
-[Elixir](https://elixir-lang.org) is a dynamic, functional programming language created by [José Valim](https://github.com/josevalim). It is great for building scalable and maintainable applications. It puts the FUN into **FUN**ctional programming! This guide will walk you through its basics in less than 30 minutes.
+[Elixir](https://elixir-lang.org) is a dynamic, functional programming language created by [José Valim](https://github.com/josevalim). It is great for building scalable and maintainable applications. It puts the FUN into **FUN**ctional programming! This guide will walk you through its basics in less than 1 hour.
 
 *This guide was written by [Peter Ullrich](https://peterullrich.com). Please submit any comments on [GitHub](https://github.com/PJUllrich/run-elixir/discussions). If you want to support me, please consider buying my courses ([one](https://indiecourses.com/catalog/build-an-mvp-with-elixir-6i4V9yOqLL54GuG0HkV9HR) and [two](https://indiecourses.com/catalog/building-forms-with-phoenix-liveview-2OPYIqaekkZwrpgLUZOyZV)) or my [book](https://pragprog.com/titles/puphoe/building-table-views-with-phoenix-liveview/) 💜.*
 

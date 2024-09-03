@@ -7,6 +7,7 @@ defmodule RunElixir.MixProject do
   def project do
     [
       app: :run_elixir,
+      name: "RunElixir.com",
       version: @version,
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
@@ -44,9 +45,11 @@ defmodule RunElixir.MixProject do
   defp docs do
     [
       main: "welcome",
+      name: "RunElixir",
       source_url: @source_url,
-      # assets: %{"notebooks/files" => "files"},
-      # logo: "images/scholar_simplified.png",
+      assets: %{"assets/images" => "images"},
+      authors: ["Peter Ullrich"],
+      logo: "assets/images/logo.jpg",
       extra_section: "Guides",
       api_reference: false,
       extras: [
@@ -86,12 +89,27 @@ defmodule RunElixir.MixProject do
         Miscellaneous: [~r"/05-misc/"]
       ],
       before_closing_head_tag: &before_closing_head_tag/1,
-      before_closing_body_tag: &before_closing_body_tag/1
+      before_closing_body_tag: &before_closing_body_tag/1,
+      meta: []
     ]
   end
 
   defp before_closing_head_tag(:html) do
     """
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+    <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#9f00a7">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta property="og:title" content="RunElixir.com - The Free 1 Hour Intro to Elixir">
+    <meta property="og:image" content="https://runelixir.com/images/social-share.jpg">
+    <meta property="og:description" content="Interested in Elixir? This quickstart guide teaches you the basics and gets you coding in 1 hour.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:creator" content="@PJUllrich">
+
     <script defer data-domain="runelixir.com" src="https://plausible.io/js/script.js"></script>
     """
   end
@@ -99,7 +117,7 @@ defmodule RunElixir.MixProject do
   defp before_closing_head_tag(:epub), do: ""
 
   defp before_closing_body_tag(:html) do
-    key_navigation_script = File.read!("./assets/key-navigation.js")
+    key_navigation_script = File.read!("./assets/js/key-navigation.js")
 
     """
     <script>
