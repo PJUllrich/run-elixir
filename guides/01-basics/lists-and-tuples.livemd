@@ -10,7 +10,7 @@ A `List` is defined with square brackets and can contain elements of different d
 details = ["Peter", 32, 190.47, true, :active]
 ```
 
-Lists are not stored contiguously in memory because they are implemented as [linked lists](https://en.wikipedia.org/wiki/Linked_list). Each element is stored in memory with its value and a pointer to the next element. This structure makes traversing, updating, deleting, and prepending values slow, but appending new values fast. For more information, see the [Big-O Time Complexities](09-misc/big-o.livemd) section.
+Lists are not stored contiguously in memory because they are implemented as [linked lists](https://en.wikipedia.org/wiki/Linked_list). Each element is stored in memory with its value and a pointer to the next element. This structure makes traversing, updating, deleting, and appending values slow, but prepending new values fast. For more information, see the [Big-O Time Complexities](09-misc/big-o.livemd) section.
 
 You can access elements in various ways:
 
