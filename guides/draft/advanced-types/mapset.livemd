@@ -1,0 +1,3 @@
+# MapSet
+
+TODO: Introduce the MapSet, what it's good for, and how to create and use it.
