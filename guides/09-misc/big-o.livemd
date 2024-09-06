@@ -14,6 +14,10 @@
 
 - Maps are unordered, allow any key type, but disallow duplicate keys
 
+## [MapSet](https://hexdocs.pm/elixir/1.17/MapSet.html)
+
+Same complexities as 'Map'
+
 ## [List](https://hexdocs.pm/elixir/1.17/List.html)
 
 | Operation | Time Complexity                       |
@@ -105,9 +109,15 @@ iex> Keyword.delete([{:a, 1}, {:a, 2}], :a)
 | Deletion  | `O(1)` for `set`, `O(n)` for `ordered_set` [(ref)](https://erlang.org/workshop/2003/paper/p43-fritchie.pdf), ? for `bag` and `ordered_bag`  |
 | Length | ?, depends on the `decentralized_counters` table option [(ref)](https://www.erlang.org/doc/apps/stdlib/ets.html#info/1) |
 
-## [MapSet](https://hexdocs.pm/elixir/1.17/MapSet.html)
+## [:persistent_term](https://www.erlang.org/doc/apps/erts/persistent_term.html)
 
-Same complexities as 'Map'
+| Operation | Time Complexity |
+| --- | ---  |
+| Access    | `O(1)`|
+| Search    | `O(1)`|
+| Insertion | `O(n)` where `n` is the number of references to the term |
+| Deletion  | Just don't [(ref)](https://www.erlang.org/doc/apps/erts/persistent_term.html) |
+| Length | ? |
 
 ### References
 

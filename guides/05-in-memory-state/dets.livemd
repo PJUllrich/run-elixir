@@ -1,4 +1,46 @@
 # dets
 
-TODO: Introduce ets and dets
+If you want a disk-based version of `:ets`, then [dets](https://www.erlang.org/doc/apps/stdlib/dets.html) is your solution, at least if your state fits into a file of less than 2 GB. Moving the state to disk could free up some memory, but it will come with a significant performance decrease because all operations are now disk operations.
 
+```elixir
+# Define a path for the file. If the file doesn't exist, dets will create it.
+# We have to convert the string to a charlist here, because that's what :dets expects.
+dets_file_path = String.to_charlist("./state.dets")
+
+# Open a new file
+{:ok, _pid} = :dets.open_file(:state, file: dets_file_path)
+
+# Write records to the file
+:dets.insert(:state, {:messi, %{age: 37, goals: 837}})
+:dets.insert(:state, {:ronaldo, %{age: 39, goals: 900}})
+
+# Look up a value
+:dets.lookup(:state, :messi) |> IO.inspect(label: 1)
+
+# Update a value by overwriting it
+:dets.insert(:state, {:messi, %{age: 37, goals: 838}})
+:dets.lookup(:state, :messi) |> IO.inspect(label: 2)
+
+# Delete a record
+:dets.delete(:state, :messi)
+:dets.lookup(:state, :messi) |> IO.inspect(label: 3)
+
+# Flush the changes to disk. A file is auto-flushed every 3 minutes by default.
+# You can change this interval with the `auto_save: 1_000` option in `:dets.open_file/2`
+:dets.sync(:state)
+
+# Close the file. Don't forget this, otherwise your file isn't closed properly
+# and needs to be repaired the next time you open it, which might take a while.
+#
+# If you open the file from a process and the process terminates, this will be
+# called automatically.
+:dets.close(:state)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: [messi: %{age: 37, goals: 837}]
+2: [messi: %{age: 37, goals: 838}]
+3: []
+```

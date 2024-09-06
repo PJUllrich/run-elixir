@@ -1,0 +1,42 @@
+# persistent_term
+
+Erlang's [persistent_term](https://www.erlang.org/doc/apps/erts/persistent_term.html) is a great option if you want to keep a large state in memory and you modify it rarely or ideally, never. It solves a problem that you'll run into if you use `:ets` or a `GenServer` to store a large state in memory: whenever a process fetches your large state, the BEAM will copy the entire state and return it to the calling process. Additionally, the state is copied again and again whenever the process uses it. If your state is large, this will seriously impact your processing speed and memory usage.
+
+That's where `persistent_term` comes in. Instead of returning a copy of your state, it returns a reference to it. That way, only one version of the state stays in memory, but processes can still look up data and pass it around without problems.
+
+```elixir
+# Let's download a "large file" (just 185kb but you get the point),
+# parse it, and store its data in :persistent_term.
+Mix.install([{:req, "~> 0.5"}, {:csv, "~> 3.2.1"}])
+
+file = Req.get!("https://gist.githubusercontent.com/PJUllrich/05a091bb26669ba5fda57e5228885c95/raw/3ff9f16ae4679277e4f79cb044a860b0a0644892/medals.csv").body
+
+# Convert the string body into a stream so that we can decode it.
+{:ok, pid} = StringIO.open(file)
+
+pid
+|> IO.binstream(:line)
+|> CSV.decode!(headers: true)
+|> Enum.group_by(
+  fn %{"country" => country, "discipline" => discipline} -> {country, discipline} end,
+  fn %{"medal_code" => medal_code} -> medal_code end
+)
+|> Enum.each(fn {{country, discipline}, medals} ->
+  :persistent_term.put({RunElixir.Medals, country, discipline}, medals)
+end)
+
+# Read the data from :persistent_term without copying it to the calling process.
+#
+# Because :persistent_term isn't table-based like ets or dets, it is common to
+# prefix the keys with a module name that represents our data. In this case,
+# we name our dataset "RunElixir.Medals".
+:persistent_term.get({RunElixir.Medals, "Germany", "Judo"}) |> IO.inspect(label: 1)
+:persistent_term.get({RunElixir.Medals, "Canada", "Swimming"}) |> IO.inspect(label: 2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: ["2"]
+2: ["2", "1", "3", "1", "3", "2", "3", "1"]
+```

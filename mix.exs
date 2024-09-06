@@ -82,6 +82,7 @@ defmodule RunElixir.MixProject do
         "guides/05-in-memory-state/agent.livemd",
         "guides/05-in-memory-state/ets.livemd",
         "guides/05-in-memory-state/dets.livemd",
+        "guides/05-in-memory-state/persistent-term.livemd",
         "guides/09-misc/big-o.livemd",
         "guides/09-misc/type-hierarchy.livemd"
       ],
