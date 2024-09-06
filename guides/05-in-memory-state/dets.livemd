@@ -1,4 +1,4 @@
-# ets and dets
+# dets
 
 TODO: Introduce ets and dets
 

@@ -97,7 +97,15 @@ iex> Keyword.delete([{:a, 1}, {:a, 2}], :a)
 | Deletion  | `O(n)`                                                                                 |
 | Length | `O(n)` |
 
-## [MapSet](https://hexdocs.pm/elixir/1.17/MapSet.html#content)
+## [:ets](https://www.erlang.org/doc/apps/stdlib/ets.html)
+
+| Operation | Time Complexity                       |
+| --- | ---  |
+| Access/Search/Insertion    | `O(1)` for `set`, `O(log n)` for `ordered_set` where `n` is the table size, `O(n)` for `bag` and `duplicate_bag` where `n` is the number of duplicate keys |
+| Deletion  | `O(1)` for `set`, `O(n)` for `ordered_set` [(ref)](https://erlang.org/workshop/2003/paper/p43-fritchie.pdf), ? for `bag` and `ordered_bag`  |
+| Length | ?, depends on the `decentralized_counters` table option [(ref)](https://www.erlang.org/doc/apps/stdlib/ets.html#info/1) |
+
+## [MapSet](https://hexdocs.pm/elixir/1.17/MapSet.html)
 
 Same complexities as 'Map'
 

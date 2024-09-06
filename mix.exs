@@ -78,15 +78,20 @@ defmodule RunElixir.MixProject do
         "guides/04-async/task.livemd",
         "guides/04-async/genserver.livemd",
         "guides/04-async/supervisor.livemd",
-        "guides/05-misc/big-o.livemd",
-        "guides/05-misc/type-hierarchy.livemd"
+        "guides/05-in-memory-state/introduction.md",
+        "guides/05-in-memory-state/agent.livemd",
+        "guides/05-in-memory-state/ets.livemd",
+        "guides/05-in-memory-state/dets.livemd",
+        "guides/09-misc/big-o.livemd",
+        "guides/09-misc/type-hierarchy.livemd"
       ],
       groups_for_extras: [
         "The Basics": [~r"/01-basics/"],
         "Start Coding": [~r"/02-start-coding/"],
         "Next Steps": [~r"/03-next-steps/"],
         Async: [~r"/04-async/"],
-        Miscellaneous: [~r"/05-misc/"]
+        "In-memory State": [~r"/05-in-memory-state/"],
+        Miscellaneous: [~r"/09-misc/"]
       ],
       before_closing_head_tag: &before_closing_head_tag/1,
       before_closing_body_tag: &before_closing_body_tag/1,

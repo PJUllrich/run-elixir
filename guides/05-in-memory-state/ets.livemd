@@ -1,0 +1,108 @@
+# ets
+
+Erlang's [ets](https://www.erlang.org/doc/apps/stdlib/ets.html) module is the go-to solution for storing state that many processes need to read or write to. It can be customized for the performance requirements of your use case and allows performant concurrent read and write operations, unlike GenServers or Agents, which handle these requests sequentially and can quickly become the bottleneck of your system (although they can also handle many thousands of requests per second without breaking a sweat).
+
+State in `:ets` is organized around dynamic tables, which means you can create and delete tables at any time without the need for migrations. Each table is one process and lives on until you shut down the application or explicitly delete the table. That means that orphaned tables aren't garbage collected and can bloat your memory usage if you don't clean them up properly.
+
+```elixir
+# Create a new :ets table with these options:
+# :set - Create a Set table with unique key-value pairs
+# :public - Allow all processes to access the table
+# :named_table - Register the table under its name,
+#                which allows processes to access it through
+#                the atom name instead of the table PID.
+:ets.new(:players, [:set, :public, :named_table])
+
+# Insert values with the {key, value} format.
+:ets.insert(:players, {:messi, %{age: 37, goals: 837}})
+:ets.insert(:players, {:ronaldo, %{age: 39, goals: 900}})
+
+# Look up a value
+:ets.lookup(:players, :messi) |> IO.inspect(label: 1)
+
+# Update a value by overwriting it
+:ets.insert(:players, {:messi, %{age: 37, goals: 838}})
+:ets.lookup(:players, :messi) |> IO.inspect(label: 2)
+
+# Delete a record
+:ets.delete(:players, :messi)
+:ets.lookup(:players, :messi) |> IO.inspect(label: 3)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: [messi: %{age: 37, goals: 837}]
+2: [messi: %{age: 37, goals: 838}]
+3: []
+```
+
+## Concurrency Options ([ref](https://www.erlang.org/doc/apps/stdlib/ets.html#new/2))
+
+You can optimize an ets table for concurrent write and read operations at the expense of increased memory consumption. All write operations stay atomic and isolated though. Simply add one of these options to the `:ets.new/2` call:
+
+* `write_concurrency: false|true|auto`
+    * `false` - The default. Writes to the table must acquire a table-wide lock and block other writes until they finish.
+    * `true` - Writes to different records can happen in parallel, but writes to the same record still block each other.
+    * `auto` - **Recommended** over `true` for Erlang 25+. Similar to `true`, but it optimizes the synchronization granularity during runtime depending on how the table is used.
+* `read_concurrency: false|true`
+    * `false` - The default. Reads to the table must acquire a table-wide lock and block other reads until they finish.
+    * `true` - Optimizes the table for concurrent read operations, especially on machines with multiple CPUs. However, switching between read and write operations becomes more expensive.
+* `decentralized_counters: false|true`
+    * `false` - The default. Has no effect.
+    * `true` - Only has an effect for `:ordered_set` tables with `write_concurrency: true`. Optimizes the table for frequent calls that modify the table size (e.g. `insert/2` and `delete/2`) at the expense of much slower calls to `info/1`.
+
+When to use - and not to use - the concurrency flags:
+
+1. Enable read or write concurrency when you have many processes reading or writing to the table frequently, especially in bursts.
+2. Enable both read and write concurrency, when you have frequent bursts coming from many processes for each, **but not at the same time!**.
+3. **Don't** enable read or write concurrency when only a few processes read or write to the table, if one operation occurs much more frequently than the other (e.g. many more reads than writes), or if you don't have bursts.
+4. **Don't** enable read and write concurrency when operations are interleaved (e.g. read/write/read/read/write/read).
+
+## Table types
+
+You can create tables with four different types [(ref)](https://stackoverflow.com/questions/65771406/what-are-the-differences-between-different-ets-table-types):
+
+* `:set` - A Set table with unique, but unordered keys.
+* `:ordered_set` - A Set table with unique, ordered keys.
+* `:bag` - A Bag table with duplicate, unordered keys but multiple, unique values per key
+* `:duplicate_bag` - A Bag table with duplicate, unordered keys and multiple, duplicate values per key
+
+```elixir
+# :set tables keep only one key-value pair
+set = :ets.new(:set, [:set])
+:ets.insert(set, {1, :a})
+:ets.insert(set, {1, :b})
+:ets.insert(set, {1, :b})
+:ets.lookup(set, 1) |> IO.inspect(label: 1)
+
+# :ordered_set tables also keep only one key-value pair
+ordered_set = :ets.new(:ordered_set, [:ordered_set])
+:ets.insert(ordered_set, {1, :a})
+:ets.insert(ordered_set, {1, :b})
+:ets.insert(ordered_set, {1, :b})
+:ets.lookup(ordered_set, 1) |> IO.inspect(label: 2)
+
+# :bag tables keep multiple keys but only unique values
+bag = :ets.new(:bag, [:bag])
+:ets.insert(bag, {1, :a})
+:ets.insert(bag, {1, :b})
+:ets.insert(bag, {1, :b})
+:ets.lookup(bag, 1) |> IO.inspect(label: 3)
+
+# :duplicate_bag tables keep multiple keys and duplicate values
+duplicate_bag = :ets.new(:duplicate_bag, [:duplicate_bag])
+:ets.insert(duplicate_bag, {1, :a})
+:ets.insert(duplicate_bag, {1, :b})
+:ets.insert(duplicate_bag, {1, :b})
+:ets.lookup(duplicate_bag, 1) |> IO.inspect(label: 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: [{1, :b}]
+2: [{1, :b}]
+3: [{1, :a}, {1, :b}]
+4: [{1, :a}, {1, :b}, {1, :b}]
+```

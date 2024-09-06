@@ -1,0 +1,78 @@
+# Agent
+
+An `Agent` is a specialized `GenServer` that provides a set of helper functions which make it easy to store and update state in-memory using a process. Agents come in handy if you want a simple GenServer to hold onto state.
+
+```elixir
+defmodule RunElixir.GameState do
+  use Agent
+
+  # Public
+
+  @initial_state %{
+    rounds_played: 0,
+    current_points: 0,
+    total_points: 0
+  }
+
+  # Starts a new Agent process with an initial state.
+  def start_link(_args) do
+    Agent.start_link(fn -> @initial_state end)
+  end
+
+  # Creates a fire-and-forget message to the Agent.
+  #
+  # Unlike in a GenServer, we don't have to write callbacks
+  # for our events like `handle_cast/2` or `handle_call/3`
+  # but can define the callback as an anonymous function.
+  #
+  # The anonymous function receives the current state
+  # and has to return the new state.
+  def add_points(pid, points) do
+    Agent.cast(pid, fn state ->
+      Map.update!(state, :current_points, &(&1 + points))
+    end)
+  end
+
+  # Returns the current state.
+  def get_state(pid), do: Agent.get(pid, fn state -> state end)
+
+  # Ends the round by updating and returning the state.
+  #
+  # `Agent.get_and_update/2` receives the current state in the
+  # anonymous function and has to return a tuple with the state
+  # that should be returned to the calling process and
+  # the new process state.
+  def end_round(pid) do
+    Agent.get_and_update(pid, fn state ->
+      %{
+        rounds_played: rounds_played,
+        total_points: total_points,
+        current_points: current_points
+      } = state
+
+      new_state = %{
+        rounds_played: rounds_played + 1,
+        total_points: total_points + current_points,
+        current_points: 0
+      }
+
+      {new_state, new_state}
+    end)
+  end
+end
+
+{:ok, pid} = RunElixir.GameState.start_link([])
+RunElixir.GameState.get_state(pid) |> IO.inspect(label: 1)
+RunElixir.GameState.add_points(pid, 100) |> IO.inspect(label: 2)
+RunElixir.GameState.get_state(pid) |> IO.inspect(label: 3)
+RunElixir.GameState.end_round(pid) |> IO.inspect(label: 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1: %{current_points: 0, total_points: 0, rounds_played: 0}
+2: :ok
+3: %{current_points: 100, total_points: 0, rounds_played: 0}
+4: %{current_points: 0, total_points: 100, rounds_played: 1}
+```
