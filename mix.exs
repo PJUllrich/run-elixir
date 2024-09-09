@@ -53,7 +53,7 @@ defmodule RunElixir.MixProject do
       extra_section: "Guides",
       api_reference: false,
       extras: [
-        "guides/welcome.livemd",
+        "guides/welcome.md",
         "guides/01-basics/hello-world.livemd",
         "guides/01-basics/lists-and-tuples.livemd",
         "guides/01-basics/maps.livemd",

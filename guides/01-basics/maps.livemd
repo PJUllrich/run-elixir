@@ -8,35 +8,25 @@ A `Map` is a key-value store that can contain any value as a key.
 map = %{:hello => "World!", 32 => :age, "height" => 190.47}
 
 # If the key is an Atom, you can access its value using the dot-notation
-map.hello |> IO.inspect(label: 1)
+map.hello # => "World!"
 
 # Otherwise, you need to use the bracket-notation
-map[32] |> IO.inspect(label: 2)
-map["height"] |> IO.inspect(label: 3)
+map[32] # => :age
+map["height"] # => 190.47
 
 # Or use a helper function
-Map.get(map, 32) |> IO.inspect(label: 4)
+Map.get(map, 32) # => :age
 
 # A `nil` is returned if the key does not exist
-map["foo"] |> IO.inspect(label: 5)
+map["foo"] # => nil
 
 # Delete one key from the map
-Map.delete(map, :hello) |> IO.inspect(label: 6)
+Map.delete(map, :hello)
+# => %{32 => :age, "height" => 190.47}
 
 # Or delete multiple keys at once
-Map.drop(map, [:hello, 32]) |> IO.inspect(label: 7)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: "World!"
-2: :age
-3: 190.47
-4: :age
-5: nil
-6: %{32 => :age, "height" => 190.47}
-7: %{"height" => 190.47}
+Map.drop(map, [:hello, 32])
+# => %{"height" => 190.47}
 ```
 
 ### Maps with Atom keys
@@ -45,7 +35,7 @@ If your map contains only Atom keys, you can replace the arrow `=>` with a semic
 
 ```elixir
 map = %{hello: "World", age: 32, height: 190.47}
-map.age |> IO.inspect()
+map.age
 ```
 
 <!-- livebook:{"output":true} -->
@@ -78,13 +68,18 @@ There are a few ways to update a value in a map. They all have their pros and co
 map = %{age: 32, name: "Peter"}
 
 # This notation updates a map value:
-Map.put(map, :age, 33) |> IO.inspect(label: 1)
+Map.put(map, :age, 33)
+# => %{name: "Peter", age: 33}
+
 # But it also adds non-existent keys, which is bad if we make a typo:
-Map.put(map, :aeg, 33) |> IO.inspect(label: 2)
+Map.put(map, :aeg, 33)
+# => %{name: "Peter", age: 32, aeg: 33}
 
 # This notation does not add non-existent keys,
 # but it stays silent if we make a typo.
-Map.replace(map, :aeg, 33) |> IO.inspect(label: 3)
+Map.replace(map, :aeg, 33)
+# => %{name: "Peter", age: 32}
+
 # This version raises an error instead:
 Map.replace!(map, :aeg, 33)
 ```
@@ -92,9 +87,6 @@ Map.replace!(map, :aeg, 33)
 <!-- livebook:{"output":true} -->
 
 ```
-1: %{name: "Peter", age: 33}
-2: %{name: "Peter", age: 32, aeg: 33}
-3: %{name: "Peter", age: 32}
 ** (KeyError) key :aeg not found in: %{name: "Peter", age: 32}
     (stdlib 6.0) :maps.update(:aeg, 33, %{name: "Peter", age: 32})
 ```
@@ -105,7 +97,9 @@ Lastly, there is a shorthand notation which comes in handy if you don't want to 
 map = %{age: 32, name: "Peter"}
 
 # The shorthand notation only updates existing keys:
-%{map | age: 33, name: "Pietah"} |> IO.inspect(label: 1)
+%{map | age: 33, name: "Pietah"}
+# => %{age: 33, name: "Pietah"}
+
 # And raises if the key does not exist
 %{map | height: 190.47}
 ```
@@ -113,7 +107,6 @@ map = %{age: 32, name: "Peter"}
 <!-- livebook:{"output":true} -->
 
 ```
-1: %{age: 33, name: "Pietah"}
 ** (KeyError) key :height not found in: %{name: "Peter", age: 32}
     (stdlib 6.0) :maps.update(:height, 190.47, %{name: "Peter", age: 32})
     (stdlib 6.0) erl_eval.erl:465: anonymous fn/2 in :erl_eval.expr/6

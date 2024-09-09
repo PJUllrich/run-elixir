@@ -10,14 +10,14 @@ defmodule RunElixir.Checker do
   # This clause will be evaluated first.
   # It matches against integer values from 18 to 150.
   # The >= and <= operators are called 'Guards'.
-  def adult?(age) when age >= 18 and age <= 150 do
+  def adult?(age) when is_integer(age) and age >= 18 and age <= 150 do
     true
   end
 
   # This clause will match integer values from 0 to 17.
   # If 'age' was '18', the function clause above would have matched
   # and this function clause would never get evaluated.
-  def adult?(age) when age >= 0 do
+  def adult?(age) when is_integer(age) and age >= 0 do
     false
   end
 
@@ -46,15 +46,8 @@ end
 Now, you can either use the default value or overwrite it like this:
 
 ```elixir
-RunElixir.Profile.adult?(18) |> IO.inspect(label: 1)
-RunElixir.Profile.adult?(18, 21) |> IO.inspect(label: 2)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: true
-2: false
+RunElixir.Profile.adult?(18) # => true
+RunElixir.Profile.adult?(18, 21) # => false
 ```
 
 If you want to define a default value for multiple function clauses, you need to create a `function head`, like this:
@@ -78,15 +71,8 @@ defmodule RunElixir.ProfileChecker do
 end
 
 # Again, you can either use the default value or overwrite it when you call the function:
-RunElixir.ProfileChecker.adult?(18) |> IO.inspect(label: 1)
-RunElixir.ProfileChecker.adult?(18, 21) |> IO.inspect(label: 2)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: true
-2: false
+RunElixir.ProfileChecker.adult?(18) # => true
+RunElixir.ProfileChecker.adult?(18, 21) # => false
 ```
 
 ## Function Arity
@@ -113,37 +99,27 @@ You can define an anonymous function with `fn arguments -> body end`.
 
 ```elixir
 add = fn a, b -> a + b end
-add.(1, 2) |> IO.inspect(label: 1)
+add.(1, 2) # => 3
 
 # A function without arguments
 ran = fn -> Enum.random(1..100) end
-ran.() |> IO.inspect(label: 2)
+ran.() # => 20
 
 # You can also use anonymous functions as 'Closures' because they can 'close'
 # around variables defined in the same scope and use them later.
 value = 20
 lazy_evaluate = fn div -> value * 10.0e10 / div end
-lazy_evaluate.(2048) |> IO.inspect(label: 3)
+lazy_evaluate.(2048) # => 976562500.0
 
 # Even if you change the local variable after you define the anonymous function,
 # the function will keep the old value.
 value = 30
-lazy_evaluate.(2048) |> IO.inspect(label: 4)
+lazy_evaluate.(2048) # => 976562500.0
 
 # A shorthand notation for anonymous functions:
 # &1 is the first argument, &2 the second, and so on.
 fun = &(&1 + &2)
-fun.(4, 5) |> IO.inspect(label: 5)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: 3
-2: 20
-3: 976562500.0
-4: 976562500.0
-5: 9
+fun.(4, 5) # => 9
 ```
 
 You can assign an anonymous function to a variable and pass it around as an argument too. This comes in handy if you work with callbacks. In this example, we fetch a dad joke from an API using the HTTP library [Req](https://hexdocs.pm/req) and execute the callback function with the response.
@@ -194,8 +170,8 @@ fun = fn age ->
   :minor
 end
 
-fun.(18) |> IO.inspect(label: 1)
-fun.(17) |> IO.inspect(label: 2)
+fun.(18) # => :minor
+fun.(17) # => :minor
 ```
 
 <!-- livebook:{"output":true} -->
@@ -218,18 +194,10 @@ fun = fn age ->
   end
 end
 
-empty_fun.() |> IO.inspect(label: 1)
+empty_fun.() # => nil
 
-fun.(18) |> IO.inspect(label: 2)
-fun.(17) |> IO.inspect(label: 3)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: nil
-2: :adult
-3: nil
+fun.(18) # => :adult
+fun.(17) # => nil
 ```
 
 The only exception to this is if a function raises an exception. In that case, the rest of the function is not executed:

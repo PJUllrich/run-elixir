@@ -22,15 +22,8 @@ You can create a struct like this:
 struct = %RunElixir.Profile{name: "Peter", age: 21}
 
 # You can access the struct's fields using the dot-notation
-struct.name |> IO.inspect(label: 1)
-struct.status |> IO.inspect(label: 2)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: "Peter"
-2: :active
+struct.name # => "Peter"
+struct.status # => :active
 ```
 
 Structs give you some nice checks for free, like an exception if you try to set a field that doesn't exist.

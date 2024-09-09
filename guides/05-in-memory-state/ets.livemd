@@ -2,7 +2,7 @@
 
 Erlang's [ets](https://www.erlang.org/doc/apps/stdlib/ets.html) module is the go-to solution for storing state that many processes need to read or write to. It can be customized for the performance requirements of your use case and allows performant concurrent read and write operations, unlike GenServers or Agents, which handle these requests sequentially and can quickly become the bottleneck of your system (although they can also handle many thousands of requests per second without breaking a sweat).
 
-State in `:ets` is organized around dynamic tables, which means you can create and delete tables at any time without the need for migrations. Each table is one process and lives on until you shut down the application or explicitly delete the table. That means that orphaned tables aren't garbage collected and can bloat your memory usage if you don't clean them up properly.
+State in `:ets` is organized around dynamic tables, which means you can create and delete tables at any time without the need for migrations.
 
 ```elixir
 # Create a new :ets table with these options:
@@ -37,6 +37,69 @@ State in `:ets` is organized around dynamic tables, which means you can create a
 3: []
 ```
 
+## Avoid memory bloat
+
+Each table is one process and lives on until you terminate the table "owner" - the process that created it - or shut down the application. That means that unused tables aren't garbage collected and can bloat your memory usage if you don't clean them up properly.
+
+So, when you stop using an ets table, you should delete the table with `:ets.delete(:players)`. Alternatively, you can terminate the owner process and that will delete the table automatically.
+
+If you want to terminate the table process without loosing the table, you can change the "owner" of the table with [give_away/3](https://www.erlang.org/doc/apps/stdlib/ets.html#give_away/3) or by passing the PID of another process as the `heir`-option when you create the table.
+
+```elixir
+defmodule RunElixir.TableOwner do
+  @moduledoc "This is an example process meant to own an ets table."
+  use GenServer
+  require Logger
+
+  def start(args), do: GenServer.start(__MODULE__, args)
+  def init([name: name]), do: {:ok, name}
+
+  # The process receives this message when it inherits the table.
+  def handle_info({:"ETS-TRANSFER", table_name, from_pid, _data}, name) do
+    Logger.info("#{name} inherited table #{table_name} from #{inspect(from_pid)}")
+    {:noreply, name}
+  end
+end
+
+{:ok, parent} = RunElixir.TableOwner.start([name: "Parent"])
+{:ok, child} = RunElixir.TableOwner.start([name: "Child"])
+
+IO.inspect(self(), label: "Livebook")
+IO.inspect(parent, label: "Parent")
+IO.inspect(child, label: "Child")
+
+table_name = :inheritance
+
+# Create a table with the Livebook process as parent and define the child
+:ets.new(table_name, [:named_table, {:heir, child, nil}])
+:ets.info(table_name) |> IO.inspect(label: "At Start")
+
+# Give away the table from the current process to the Parent.
+:ets.give_away(table_name, parent, nil)
+:ets.info(table_name) |> IO.inspect(label: "Given away")
+
+# Terminate the Parent, inherit the table to the Child
+Process.exit(parent, :normal)
+:timer.sleep(1) # <- Wait for the inheritance to happen
+:ets.info(table_name) |> IO.inspect(label: "After inheritance")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Livebook: #PID<0.1582.0>
+Parent: #PID<0.1669.0>
+Child: #PID<0.1670.0>
+
+At Start: [ owner: #PID<0.1582.0>, heir: #PID<0.1670.0> ]
+
+Given away: [ owner: #PID<0.1669.0>, heir: #PID<0.1670.0> ]
+16:47:10.686 [info] Parent inherited table inheritance from #PID<0.1582.0>
+
+After inheritance: [ owner: #PID<0.1670.0>, heir: #PID<0.1670.0> ]
+16:47:10.686 [info] Child inherited table inheritance from #PID<0.1669.0>
+```
+
 ## Concurrency Options ([ref](https://www.erlang.org/doc/apps/stdlib/ets.html#new/2))
 
 You can optimize an ets table for concurrent write and read operations at the expense of increased memory consumption. All write operations stay atomic and isolated though. Simply add one of these options to the `:ets.new/2` call:
@@ -55,7 +118,7 @@ You can optimize an ets table for concurrent write and read operations at the ex
 When to use - and not to use - the concurrency flags:
 
 1. Enable read or write concurrency when you have many processes reading or writing to the table frequently, especially in bursts.
-2. Enable both read and write concurrency, when you have frequent bursts coming from many processes for each, **but not at the same time!**.
+2. nable both read and write concurrency, when you have frequent bursts coming from many processes for each, **but not at the same time!**.
 3. **Don't** enable read or write concurrency when only a few processes read or write to the table, if one operation occurs much more frequently than the other (e.g. many more reads than writes), or if you don't have bursts.
 4. **Don't** enable read and write concurrency when operations are interleaved (e.g. read/write/read/read/write/read).
 

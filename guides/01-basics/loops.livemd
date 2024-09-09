@@ -38,29 +38,24 @@ You will mostly use the `Enum` helper functions to iterate and modify collection
 
 ```elixir
 # Apply a function to every element and return the result.
-Enum.map([1, 2, 3], fn x -> x * 2 end) |> IO.inspect(label: "Enum.map")
+Enum.map([1, 2, 3], fn x -> x * 2 end)
+# => [2, 4, 6]
 
 # Apply a function, but ignore the result.
-Enum.each([1, 2, 3], fn x -> x * 2 end) |> IO.inspect(label: "Enum.each")
+Enum.each([1, 2, 3], fn x -> x * 2 end)
+# => :ok
 
 # Apply a function and add the result to an accumulator.
-Enum.reduce([1, 2, 3], 0, fn x, acc -> acc + x end) |> IO.inspect(label: "Enum.reduce")
+Enum.reduce([1, 2, 3], 0, fn x, acc -> acc + x end)
+# => 6
 
 # Only keep the elements for which the function evaluates to truthy and filter out the rest.
-Enum.filter([1, 2, 3], fn x -> x == 2 end) |> IO.inspect(label: "Enum.filter")
+Enum.filter([1, 2, 3], fn x -> x == 2 end)
+# => [2]
 
 # Reject/remove an element if the function evaluates to truthy.
-Enum.reject([1, 2, 3], fn x -> x == 2 end) |> IO.inspect(label: "Enum.reject")
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-Enum.map: [2, 4, 6]
-Enum.each: :ok
-Enum.reduce: 6
-Enum.filter: [2]
-Enum.reject: [1, 3]
+Enum.reject([1, 2, 3], fn x -> x == 2 end)
+# => [1, 3]
 ```
 
 ## Recursive Functions
@@ -76,11 +71,6 @@ defmodule RunElixir.Loop do
   defp do_loop([value | rest], result, fun), do: do_loop(rest, [fun.(value) | result], fun)
 end
 
-RunElixir.Loop.loop([1, 2, 3], &(&1 * 2)) |> IO.inspect(label: "Result")
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-Result: [2, 4, 6]
+RunElixir.Loop.loop([1, 2, 3], &(&1 * 2))
+# => [2, 4, 6]
 ```

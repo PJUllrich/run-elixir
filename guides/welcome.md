@@ -12,8 +12,8 @@ However, a fast way to install the language on `macOS` and `linux` is to use the
 
 ```bash
 # Install the elixir and erlang plugins
-asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
+asdf plugin add elixir
+asdf plugin add erlang
 
 # Now install erlang
 asdf install erlang latest
@@ -29,7 +29,7 @@ elixir -v
 
 If you want to run the following code yourself, there are three options:
 
-1. **Recommended**: Install [Livebook](https://livebook.dev/) and simply click the `Run in Livebook` button above each file to open it in an interactive notebook.
+1. **Recommended**: Install [Livebook](https://livebook.dev/) (see the link for instructions) and simply click the `Run in Livebook` button above each file to open it in an interactive notebook. The files will open on your local computer.
 1. Start an Elixir REPL with `iex -S mix` and copy and paste the code into the command line.
 1. Copy and paste the code into an Elixir script file, like `script.exs`, and run `mix run script.exs`.
 

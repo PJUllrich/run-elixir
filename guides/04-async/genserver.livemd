@@ -119,8 +119,8 @@ alias RunElixir.GameState
 # We can call the GenServer either with its (atom) name or its PID.
 GameState.get_state(pid) |> IO.inspect(label: 1)
 GameState.add_points(:game, 100) |> IO.inspect(label: 2)
-GameState.end_round(:game) |> IO.inspect(label: 3)
-GameState.get_state(:game) |> IO.inspect(label: 4)
+GameState.get_state(:game) |> IO.inspect(label: 3)
+GameState.end_round(:game) |> IO.inspect(label: 4)
 
 # We can easily start another process, for example, for another player.
 {:ok, pid} = GameState.start_link([name: :new_game])
@@ -138,8 +138,8 @@ GameState.end_round() |> IO.inspect(label: 7)
 14:49:27.607 [info] GameState has started!
 1: %{rounds_played: 0, total_points: 0, current_points: 0}
 2: :ok
-3: {:ok, %{rounds_played: 1, total_points: 100, current_points: 0}}
-4: %{rounds_played: 1, total_points: 100, current_points: 0}
+3: %{rounds_played: 0, total_points: 0, current_points: 100}
+4: {:ok, %{rounds_played: 1, total_points: 100, current_points: 0}}
 
 14:49:27.608 [info] GameState has started!
 5: %{rounds_played: 0, total_points: 0, current_points: 0}

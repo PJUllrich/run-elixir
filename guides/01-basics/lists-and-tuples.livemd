@@ -18,43 +18,34 @@ You can access elements in various ways:
 details = ["Peter", 32, 190.47, true, :active]
 
 # Get the 2nd element, because lists are 0-based.
-Enum.at(details, 1) |> IO.inspect(label: 1)
+Enum.at(details, 1) # => 32
 
 # Get the last element with a negative index
-Enum.at(details, -1) |> IO.inspect(label: 2)
+Enum.at(details, -1) # => :active
 
 # Or use the `List` helper functions
-List.first(details) |> IO.inspect(label: 3)
-List.last(details) |> IO.inspect(label: 4)
+List.first(details) # => "Peter"
+List.last(details) # => :active
 
 # Update an element at a specific index
-List.replace_at(details, 1, 30) |> IO.inspect(label: 5)
+List.replace_at(details, 1, 30)
+# => ["Peter", 30, 190.47, true, :active]
 
 # Prepend a value to the list
-[:adult | details] |> IO.inspect(label: 6)
+[:adult | details]
+# => [:adult, "Peter", 32, 190.47, true, :active]
 
 # Concatenate two lists
-details ++ [nil, 123] |> IO.inspect(label: 7)
+details ++ [nil, 123]
+# => ["Peter", 32, 190.47, true, :active, nil, 123]
 
 # Delete the first occurrence of an element
-List.delete(details, 32) |> IO.inspect(label: 8)
+List.delete(details, 32)
+# => ["Peter", 190.47, true, :active]
 
 # Delete an element at a specific index
-List.delete_at(details, -1) |> IO.inspect(label: 9)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: 32
-2: :active
-3: "Peter"
-4: :active
-5: ["Peter", 30, 190.47, true, :active]
-6: [:adult, "Peter", 32, 190.47, true, :active]
-7: ["Peter", 32, 190.47, true, :active, nil, 123]
-8: ["Peter", 190.47, true, :active]
-9: ["Peter", 32, 190.47, true]
+List.delete_at(details, -1)
+# => ["Peter", 32, 190.47, true]
 ```
 
 ## Tuples
@@ -65,29 +56,22 @@ A `Tuple` is stored contiguously in memory. That makes accessing an element by i
 hobbies = {"Sport", "Coffee", "Writing"}
 
 # Get the first element
-elem(hobbies, 0) |> IO.inspect(label: 1)
+elem(hobbies, 0) # => "Sport"
 
 # Update an element
-put_elem(hobbies, 2, "Reading") |> IO.inspect(label: 2)
+put_elem(hobbies, 2, "Reading")
+# => {"Sport", "Coffee", "Reading"}
 
 # Append an element
-Tuple.append(hobbies, "Coding") |> IO.inspect(label: 3)
+Tuple.append(hobbies, "Coding")
+# => {"Sport", "Coffee", "Writing", "Coding"}
 
 # Delete an element at a specific index
-Tuple.delete_at(hobbies, 1) |> IO.inspect(label: 4)
+Tuple.delete_at(hobbies, 1)
+# => {"Sport", "Writing"}
 
 # Get the Tuple size
-tuple_size(hobbies) |> IO.inspect(label: 5)
+tuple_size(hobbies) # => 3
 ```
 
-<!-- livebook:{"output":true} -->
-
-```
-1: "Sport"
-2: {"Sport", "Coffee", "Reading"}
-3: {"Sport", "Coffee", "Writing", "Coding"}
-4: {"Sport", "Writing"}
-5: 3
-```
-
-If you look closely at the output above, you'll see that although we update and append elements to our tuple, the original `hobbies` variable is not modified. In Elixir, variables are immutable and every function call returns a copy of the input variable instead of a modified version of the original variable.
+If you look closely at the output above, you'll see that although we update and append elements to our tuple, the original `hobbies` variable is not modified. In Elixir, variables are immutable and every function call => a copy of the input variable instead of a modified version of the original variable.

@@ -34,16 +34,14 @@ end
 You can call a module function like this:
 
 ```elixir
-RunElixir.Profile.adult?(18) |> IO.inspect(label: 1)
-RunElixir.Profile.adult?(17) |> IO.inspect(label: 2)
+RunElixir.Profile.adult?(18) # => true
+RunElixir.Profile.adult?(17) # => false
 RunElixir.Profile.adult?(-1)
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-1: true
-2: false
 ** (RuntimeError) Invalid age -1
     #cell:ephnppjvminxbiag:13: RunElixir.Profile.adult?/1
 ```
@@ -79,17 +77,8 @@ defmodule RunElixir.Checker do
   defdelegate check_adult?(age), to: RunElixir.Profile, as: :adult?
 end
 
-RunElixir.Checker.check_age(%{age: 18}) |> IO.inspect(label: 1)
-RunElixir.Checker.check_age_aliased(%{age: 18}) |> IO.inspect(label: 2)
-RunElixir.Checker.check_age_imported(%{age: 18}) |> IO.inspect(label: 3)
-RunElixir.Checker.check_adult?(18) |> IO.inspect(label: 4)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: true
-2: true
-3: true
-4: true
+RunElixir.Checker.check_age(%{age: 18}) # => true
+RunElixir.Checker.check_age_aliased(%{age: 18}) # => true
+RunElixir.Checker.check_age_imported(%{age: 18}) # => true
+RunElixir.Checker.check_adult?(18) # => true
 ```

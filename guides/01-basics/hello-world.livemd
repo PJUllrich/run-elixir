@@ -1,9 +1,5 @@
 # Hello World!
 
-
-
-## Hello World
-
 Here's how you write a `Hello World` script in Elixir.
 
 ```elixir

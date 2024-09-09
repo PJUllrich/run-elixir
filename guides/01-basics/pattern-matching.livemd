@@ -49,8 +49,8 @@ map_empty? = fn
   _ -> false
 end
 
-map_empty?.(%{}) |> IO.inspect(label: "1 - empty")
-map_empty?.(%{a: 1, b: 2}) |> IO.inspect(label: "1 - not empty")
+map_empty?.(%{}) # => true
+map_empty?.(%{a: 1, b: 2}) # => true
 
 # You can either use the 'map_size/1' guard
 
@@ -59,8 +59,8 @@ map_empty_guard? = fn
   _ -> false
 end
 
-map_empty_guard?.(%{}) |> IO.inspect(label: "2 - empty")
-map_empty_guard?.(%{a: 1, b: 2}) |> IO.inspect(label: "2 - not empty")
+map_empty_guard?.(%{}) # => true
+map_empty_guard?.(%{a: 1, b: 2}) # => false
 
 # Or a comparison to match against an empty map
 
@@ -69,19 +69,8 @@ map_empty_comparison? = fn
   _ -> false
 end
 
-map_empty_comparison?.(%{}) |> IO.inspect(label: "3 - empty")
-map_empty_comparison?.(%{a: 1, b: 2}) |> IO.inspect(label: "3 - not empty")
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1 - empty: true
-1 - not empty: true
-2 - empty: true
-2 - not empty: false
-3 - empty: true
-3 - not empty: false
+map_empty_comparison?.(%{}) # => true
+map_empty_comparison?.(%{a: 1, b: 2}) # => false
 ```
 
 ## Match in Function Clauses
@@ -93,8 +82,8 @@ fun = fn
   %{age: age} -> age
 end
 
-fun.(%{status: :active, height: 190.47}) |> IO.inspect(label: 1)
-fun.(%{age: 32, height: 190.47}) |> IO.inspect(label: 2)
+fun.(%{status: :active, height: 190.47}) # => :active
+fun.(%{age: 32, height: 190.47}) # => 32
 
 # Or in Module functions
 defmodule RunElixir.Profile do
@@ -102,17 +91,8 @@ defmodule RunElixir.Profile do
   def details(%{age: age}), do: age
 end
 
-%{status: :inactive, height: 190.47} |> RunElixir.Profile.details() |> IO.inspect(label: 3)
-%{age: 30, height: 190.47} |> RunElixir.Profile.details() |> IO.inspect(label: 4)
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-1: :active
-2: 32
-3: :inactive
-4: 30
+RunElixir.Profile.details(%{status: :inactive, height: 190.47}) # => :inactive
+RunElixir.Profile.details(%{age: 30, height: 190.47}) # => 30
 ```
 
 ## Match against Strings
@@ -156,13 +136,25 @@ fun = fn
   %{name: _name} -> "That's not me."
 end
 
-fun.(%{name: "Peter"}) |> IO.inspect(label: 1)
-fun.(%{name: "Bob"}) |> IO.inspect(label: 2)
+fun.(%{name: "Peter"}) # => "That's me!"
+fun.(%{name: "Bob"}) # => "That's not me."
+```
+
+## Assignment is Matching
+
+Fun fact: In Elixir there is no such thing as a "variable assignment". It's match! When you assign a value to a variable, you actually "match" the value against the variable and because that match is always true, the variable will continue to hold the value. This becomes clearer when we pin the variable:
+
+```elixir
+a = 1
+a = 2
+^a = 3
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-1: "That's me!"
-2: "That's not me."
+** (MatchError) no match of right hand side value: 3
+    (stdlib 6.0) erl_eval.erl:652: :erl_eval.expr/6
 ```
+
+Interesting! When we pin the variable `a` and try to assign a new value to it, it raises a `MatchError`! This happens because `a` holds the value `2` when we try to match it agains the value `3`, which creates a mismatch (Got it? Mis-match! 😬). This shows that the `=` operator is actually a match, not an assignment. Today you learned!
