@@ -1,0 +1,3 @@
+# NIFs
+
+TODO: Explain how a NIF works and show a simple example using e.g. Rust.

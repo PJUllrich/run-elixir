@@ -1,0 +1,3 @@
+# The Lifecycle of a Phoenix Request
+
+TODO: Go through every plug and step in the `Router` and `Endpoint` up to the `Controller` and explain what happens.

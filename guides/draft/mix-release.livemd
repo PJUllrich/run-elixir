@@ -1,0 +1,3 @@
+# mix release
+
+TODO: Explain how to release an application using `mix release` and how to deploy it to a VPS on e.g. DigitalOcean.

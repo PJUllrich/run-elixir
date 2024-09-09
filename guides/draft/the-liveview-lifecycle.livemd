@@ -1,0 +1,3 @@
+# The LiveView Lifecycle
+
+TODO: Explain the LiveView lifecycle with static, then dynamic rendering and WebSocket connection. Don't go tooooo much into detail to keep the maintenance level low if LiveView changes, but rather explain the high-level steps of the lifecycle.
