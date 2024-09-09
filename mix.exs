@@ -110,9 +110,9 @@ defmodule RunElixir.MixProject do
     <meta name="msapplication-TileColor" content="#9f00a7">
     <meta name="theme-color" content="#ffffff">
 
-    <meta property="og:title" content="RunElixir.com - The Free 1 Hour Intro to Elixir">
+    <meta property="og:title" content="RunElixir.com - The Free 30min Intro to Elixir">
     <meta property="og:image" content="https://runelixir.com/images/social-share.jpg">
-    <meta property="og:description" content="Interested in Elixir? This quickstart guide teaches you the basics and gets you coding in 1 hour.">
+    <meta property="og:description" content="Interested in Elixir? This quickstart guide teaches you the basics and gets you coding in 30 minutes.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:creator" content="@PJUllrich">
 
