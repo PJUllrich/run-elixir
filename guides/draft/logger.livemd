@@ -1,3 +1,0 @@
-# Logger
-
-TODO: Explain briefly how to use the Logger with 'require' and then 'info', 'error', 'warning', etc.

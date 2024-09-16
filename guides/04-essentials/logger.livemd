@@ -1,0 +1,105 @@
+# Logger
+
+## Section
+
+Elixir provides a single interface for creating logs in your application through the `Logger` module.
+
+```elixir
+defmodule RunElixir.LogExample do
+
+  # You always have to `require` the Logger first.
+  # Elixir will warn you if you forget this.
+  require Logger
+
+  def test() do
+    # Logger supports all 7 system log levels:
+    Logger.debug("This is a debug message")
+    Logger.info("This is an info message")
+    Logger.notice("This is a notice message")
+    Logger.warning("This is a warning message")
+    Logger.error("This is an error message")
+    Logger.critical("This is a critical message")
+    Logger.alert("This is an alert message")
+    Logger.emergency("This is an emergency message")
+  end
+end
+
+RunElixir.LogExample.test()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+10:31:41.197 [debug] This is a debug message
+10:31:41.198 [info] This is an info message
+10:31:41.198 [notice] This is a notice message
+10:31:41.198 [warning] This is a warning message
+10:31:41.198 [error] This is an error message
+10:31:41.198 [critical] This is a critical message
+10:31:41.198 [alert] This is an alert message
+10:31:41.198 [emergency] This is an emergency message
+```
+
+The `debug`, `info`, `warning`, and `error` levels are widely used in Elixir applications and you'll encounter them all the time. `critical` messages are usually logged only by the system or the virtual machine and I've yet to see a `notice`, `alert`, or `emergency` log.
+
+## Caveat
+
+You have to watch out when you want to log variables. Not all variables implement the `String.Chars` protocol, which means Elixir doesn't know how to convert them to a string. If you try to log them anyway, you'll encounter an error.
+
+```elixir
+require Logger
+
+Logger.info("My map: #{%{a: 1}}")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+** (Protocol.UndefinedError) protocol String.Chars not implemented for %{a: 1} of type Map
+    (elixir 1.17.2) lib/string/chars.ex:3: String.Chars.impl_for!/1
+    (elixir 1.17.2) lib/string/chars.ex:22: String.Chars.to_string/1
+```
+
+You can prevent this issue by wrapping your variables with `inspect/2` first. The `Inspect` protocol can "stringify" almost all variable types, so it's a pretty safe option to use.
+
+```elixir
+require Logger
+
+Logger.info("My map: #{inspect(%{a: 1})}")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+10:40:10.782 [info] My map: %{a: 1}
+```
+
+## Configuration
+
+The `Logger` offers extensive [configuration](https://hexdocs.pm/logger/1.15.8/Logger.html#module-configuration) options, but you can configure them only for an Elixir application, not a script or Livebook as shown above. If you followed the [Create a Phoenix Project](02-start-coding/create-a-phoenix-project.md) guide, you can configure the logger in the `config/(config|dev|prod|test).exs` files.
+
+You can set global options that should apply to all environments in the `config/config.exs` file and add different options in the `test.exs`, `dev.exs`, or `prod.exs` files. Keep in mind that any configuration you put in the `test|dev|prod.exs` files will overwrite existing options from the `config.exs` configuration.
+
+This is an example of how you can overwrite the global configuration for the `dev` environment.
+
+```elixir
+# e.g. in config/config.exs
+
+config :logger, :console,
+  format: "\n$date $time [$level] $message\n",
+  level: :info
+
+# e.g. in config/dev.exs
+
+# This configuration will overwrite the `level`-option
+# from the `config.exs` file, but keep its `format`-option.
+config :logger, :console, level: :debug
+```
+
+Now, Elixir will log all messages, including `debug` messages, in your local development environment using the format defined in `config.exs`. You can find all format options [here](https://hexdocs.pm/logger/1.15.8/Logger.Formatter.html#module-formatting). If you run your application with `mix phx.server`, you'll see the log messages have now the following format.
+
+```
+2024-09-16 10:57:05.096 [info] log message here
+2024-09-16 10:57:06.030 [info] another log message
+```
+
