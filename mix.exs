@@ -74,6 +74,7 @@ defmodule RunElixir.MixProject do
         "guides/03-next-steps/find-a-job.md",
         "guides/03-next-steps/find-libraries.md",
         "guides/04-essentials/logger.livemd",
+        "guides/04-essentials/testing.livemd",
         "guides/05-async/async.livemd",
         "guides/05-async/spawn.livemd",
         "guides/05-async/task.livemd",

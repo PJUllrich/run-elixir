@@ -1,3 +1,0 @@
-# Testing
-
-TODO: Give a quick intro into how to write and run tests in a Mix project.

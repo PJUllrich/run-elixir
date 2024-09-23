@@ -1,0 +1,132 @@
+# Testing
+
+Elixir comes with a powerful testing framework called [ExUnit](https://hexdocs.pm/ex_unit/ExUnit.html). It makes writing unit tests incredibly simple. For end-to-end tests, the go-to library is [Wallaby](https://github.com/elixir-wallaby/wallaby), but if you use LiveView, you should be able to write most of your integration tests in ExUnit without having to start a browser. Let's have a look at how to use ExUnit and Wallaby for our tests.
+
+## Unit Tests
+
+If you generated the ToDo app in chapter [Create a Phoenix Project](02-start-coding/create-a-phoenix-project.md), Phoenix generated a complete test setup and some unit tests for you. You can find the unit tests in `test/demo/to_dos_test.exs` and `test/demo_web/live/to_do_live_test.exs` and the test setup in `test/test_helper.exs` and `test/support/(data|conn)_case.ex`.
+
+Let's have a look at the `"saves new to_do"` unit test in `test/demo_web/live/to_do_live_test.exs`:
+
+```elixir
+defmodule DemoWeb.ToDoLiveTest do
+  # This imports common test functions like our assertions,
+  # creates a sandboxed database connection, and builds a connection
+  # that we can use to load the website.
+  # Since our database connections are sandboxes, we can run tests in parallel.
+  # That's what the async: true flag does here. If this was async: false,
+  # the tests in this file would run sequentially, not in parallel.
+  use DemoWeb.ConnCase, async: true
+
+  # These import our LiveView-specific test helpers and assertions
+  # and our "fixtures" with which we can quickly create a
+  # ToDo database record.
+  import Phoenix.LiveViewTest
+  import Demo.ToDosFixtures
+
+  @create_attrs %{name: "some name", done: true, deadline: "2024-09-22T12:12:00Z"}
+  @invalid_attrs %{name: nil, done: false, deadline: nil}
+
+  # This defines a setup callback we can execute before each test execution.
+  # It inserts a ToDo database record and returns a map that is merged into
+  # the context map which our tests receive as an argument.
+  defp create_to_do(_) do
+    to_do = to_do_fixture()
+    %{to_do: to_do}
+  end
+
+  # We use 'describe' to wrap a group of tests, in this case
+  # we wrap all tests related to the Index LiveView which lists all ToDos.
+  describe "Index" do
+    # We can define one or multiple setup callbacks that are executed
+    # before each test unit using `setup`. We could also use `setup_all` if
+    # we wanted to execute the callbacks only once for all tests.
+    setup [:create_to_do]
+
+    # Each test needs a name and might receive a context map as a second parameter.
+    # The context map can be populated in test setup callbacks like `create_to_do/1`.
+    test "saves new to_do", %{conn: conn, to_do: to_do} do
+      # First, we navigate to the "List ToDos" route and receive a LiveView connection
+      # and the rendered html as return values.
+      {:ok, index_live, _html} = live(conn, ~p"/todos")
+
+      # Next, we click on the "New To do" button which should open up a modal.
+      assert index_live |> element("a", "New To do") |> render_click() =~
+               "New To do"
+
+      # We assert that the click on the button patch-navigated us to the modal-showing route.
+      # Since it's a patch navigation, we don't reload the LiveView, but only execute the
+      # handle_params/3 callback in the LiveView.
+      assert_patch(index_live, ~p"/todos/new")
+
+      # We try to insert invalid parameters and assert that
+      # the form shows us a "can't be blank" form error.
+      assert index_live
+             |> form("#to_do-form", to_do: @invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      # We fill out the form with valid attributes and submit the form
+      # which should create a new ToDo database record.
+      assert index_live
+             |> form("#to_do-form", to_do: @create_attrs)
+             |> render_submit()
+
+      # We assert that we patch-navigate back to the "List ToDos" route
+      # after we submitted the form.
+      assert_patch(index_live, ~p"/todos")
+
+      # We re-render the page to assert that we see a Flash message
+      # and that the name of the new ToDo shows on the page.
+      html = render(index_live)
+      assert html =~ "To do created successfully"
+      assert html =~ "some name"
+    end
+  end
+end
+```
+
+As you can see, you can write powerful unit tests with ExUnit and easily extend them to integration tests using the LiveView test helpers. The best thing about this setup is that you can easily drop down to the database level and check that a record was persisted correctly. Let's extend the test above to test just that.
+
+```elixir
+test "saves new to_do", %{conn: conn, to_do: to_do} do
+
+  # Prior test code omitted ...
+
+  html = render(index_live)
+  assert html =~ "To do created successfully"
+  assert html =~ "some name"
+
+  # Add the following lines:
+
+  # Fetch all ToDos in the database.
+  todos = Demo.ToDos.list_todos()
+
+  # Assert that we now have two ToDos in the database,
+  # one from the setup callback and one from submitting the form.
+  assert length(todos) == 2
+
+  # Find the new ToDo which we created through the form.
+  todo = Enum.find(todos, & &1.id != to_do.id)
+
+  # Assert that all fields were set properly.
+  assert todo.name == "some name"
+  assert todo.done == true
+  assert todo.deadline == ~U[2024-09-22 12:12:00Z]
+end
+```
+
+You can run your tests with:
+
+```
+mix test
+
+# Or run the test in only one file
+mix test test/demo_web/live/to_do_live_test.exs
+
+# Or run only the test starting in line 26
+mix test test/demo_web/live/to_do_live_test.exs:26
+```
+
+## End-to-end Tests
+
+For end-to-end testing, Wallaby is a popular choice in the Elixir community. It allows you to write tests that simulate user interactions in a real browser, which can be especially useful for testing complex UI interactions or scenarios that are difficult to simulate with LiveView tests alone.
