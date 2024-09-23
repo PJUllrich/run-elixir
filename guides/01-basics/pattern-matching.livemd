@@ -44,39 +44,44 @@ IO.inspect(tail, label: "5 - tail")
 Watch out if you want to match against an empty map, because Elixir will match any map with an empty map, even if the map isn't empty.
 
 ```elixir
-map_empty? = fn
-  %{} -> true
-  _ -> false
+defmodule RunElixir.Match do
+  def empty?(%{}), do: true
+  def empty?(_), do: false
 end
 
-map_empty?.(%{}) # => true
-map_empty?.(%{a: 1, b: 2}) # => true
+RunElixir.Match.empty?(%{}) # => true
+RunElixir.Match.empty?(%{a: 1, b: 2}) # => true
 
 # You can either use the 'map_size/1' guard
 
-map_empty_guard? = fn
-  map when map_size(map) == 0 -> true
-  _ -> false
+defmodule RunElixir.MatchSize do
+  def empty?(map) when map_size(map) == 0, do: true
+  def empty?(_), do: false
 end
 
-map_empty_guard?.(%{}) # => true
-map_empty_guard?.(%{a: 1, b: 2}) # => false
+RunElixir.MatchSize.empty?(%{}) # => true
+RunElixir.MatchSize.empty?(%{a: 1, b: 2}) # => false
 
 # Or a comparison to match against an empty map
 
-map_empty_comparison? = fn
-  map when map == %{} -> true
-  _ -> false
+defmodule RunElixir.MatchEqual do
+  def empty?(map) when map == %{}, do: true
+  def empty?(_), do: false
 end
 
-map_empty_comparison?.(%{}) # => true
-map_empty_comparison?.(%{a: 1, b: 2}) # => false
+RunElixir.MatchEqual.empty?(%{}) # => true
+RunElixir.MatchEqual.empty?(%{a: 1, b: 2}) # => false
 ```
 
 ## Match in Function Clauses
 
 ```elixir
-# You can match (partially) in function clauses:
+# You can match (partially) in (anonymous) function clauses.
+#
+# This here defines an anonymous function with two clauses.
+# It's the same as defining two function clauses in a module
+# like we've done with 'def empty?()' above, just that
+# the function isn't wrapped in a module.
 fun = fn
   %{status: status} -> status
   %{age: age} -> age
