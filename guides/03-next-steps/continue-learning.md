@@ -20,6 +20,7 @@ The following list is non-exhaustive and has no particular order.
 * [LearnElixir](https://learn-elixir.dev)
 * [Phoenix LiveView](https://phoenixliveview.com/)
 * [Grox.io](https://grox.io/)
+* Pragmatic Studio's [Elixir](https://pragmaticstudio.com/courses/elixir), [Phoenix](https://pragmaticstudio.com/courses/phoenix), and [LiveView](https://pragmaticstudio.com/courses/phoenix-liveview) courses
 
 ## Interactive Guides
 
