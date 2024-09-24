@@ -1,0 +1,29 @@
+name: Publish to Netlify
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    env:
+      ELIXIR_VERSION: 1.17.2-otp-27
+      ERLANG_VERSION: 27.0.1
+      NODE_VERSION: 20.2.0
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          otp-version: ${{ env.ERLANG_VERSION }}
+      - name: Generate Documentation
+        run: mix docs
+      - name: Deploy to Netlify
+        run: ./deploy.sh
+        env:
+          NETLIFY_ACCESS_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
