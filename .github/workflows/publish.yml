@@ -20,8 +20,39 @@ jobs:
         with:
           elixir-version: ${{ env.ELIXIR_VERSION }}
           otp-version: ${{ env.ERLANG_VERSION }}
+
+      # Cache Mix Dependencies based on mix.lock
+      - name: Retrieve Mix Dependencies Cache
+        uses: actions/cache@v4
+        id: mix-cache
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+      # Get Mix Dependencies only if cache was not hit
+      - name: Install Mix Dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
+
+      # Cache the _build folder
+      - name: Retrieve Build Cache
+        uses: actions/cache@v4
+        id: build-cache
+        with:
+          path: _build
+          key: ${{ runner.os }}-build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+      # Compile mix dependencies if the _build folder was not cached
+      - name: Compile Mix Dependencies
+        if: steps.build-cache.outputs.cache-hit != 'true'
+        run: MIX_ENV=test mix deps.compile
+
       - name: Generate Documentation
         run: mix docs
+
       - name: Deploy to Netlify
         run: ./deploy.sh
         env:
