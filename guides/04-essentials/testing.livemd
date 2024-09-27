@@ -7,6 +7,10 @@ Elixir comes with a powerful testing framework called [ExUnit](https://hexdocs.p
 Unit tests in ExUnit usually have the following structure and are stored in the `test` folder. They need to have the `*_test.exs` file ending, otherwise the test runner will ignore them.
 
 ```elixir
+# To run the tests, you need to start ExUnit first.
+# In your application, this is usually executed in the "test/test_helper.exs" file.
+ExUnit.start()
+
 # lib/example.ex
 defmodule RunElixir.Example do
   @moduledoc "The module we want to test."
@@ -57,10 +61,7 @@ defmodule RunElixir.ExampleTest do
   end
 end
 
-# To run the tests from your command line, you need to start ExUnit first.
-ExUnit.start()
-
-# Now, you could run "mix test" to run the tests.
+# You could run the tests with "mix test" in your terminal.
 
 # Alternatively, you can execute tests from an IEx session like this:
 ExUnit.run()

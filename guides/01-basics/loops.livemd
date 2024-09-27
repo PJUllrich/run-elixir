@@ -74,3 +74,5 @@ end
 RunElixir.Loop.loop([1, 2, 3], &(&1 * 2))
 # => [2, 4, 6]
 ```
+
+Our `loop/2` function executes the `do_loop/3` private function which calls itself recursively until it has traveresed the entire list. With every call, the second clause of `do_loop/3` removes one element from the list, applies the anonymous function to it, and adds the result to the results list. When the list of elements is exhausted, the first `do_loop/3` clause matches. It reverses the results and returns them.
