@@ -4,6 +4,93 @@ Elixir comes with a powerful testing framework called [ExUnit](https://hexdocs.p
 
 ## Unit Tests
 
+Unit tests in ExUnit usually have the following structure and are stored in the `test` folder. They need to have the `*_test.exs` file ending, otherwise the test runner will ignore them.
+
+```elixir
+# lib/example.ex
+defmodule RunElixir.Example do
+  @moduledoc "The module we want to test."
+
+  def div(nominator, denominator), do: nominator / denominator
+end
+
+# test/example_test.exs
+defmodule RunElixir.ExampleTest do
+  # Defines this module as a test case and instructs the test runner
+  # to run the tests in parallel with other tests.
+  use ExUnit.Case, async: true
+
+  alias RunElixir.Example
+
+  # A setup callback that runs before every test.
+  #
+  # You can also use `setup_all` to run a test setup
+  # only once for all tests.
+  setup do
+    # The "context" map returned by the setup and setup_all callbacks
+    # is passed to every describe and test block as an argument.
+    %{number: 2}
+  end
+
+  # descibe/1 blocks are useful for wrapping tests for a function or feature
+  describe "div/2" do
+
+    # describe blocks can have their own setup and setup_all callbacks
+    # which run only for the tests inside the describe-block
+    setup %{number: number} do
+      # You can modify the context map if you want.
+      %{number: number + 2, divisor: 4}
+    end
+
+    test "returns a fraction", %{number: number, divisor: divisor} do
+      # assert expects a "truthy" value and otherwise fails the test.
+      assert Example.div(number, divisor) == 0.5
+    end
+
+    test "throws an exception if divided by Zero", %{number: number} do
+      # You can assert many different scenarios.
+      # Check the `ExUnit.Assertions` block for all options.
+      assert_raise ArithmeticError, fn ->
+        Example.div(number, 0)
+      end
+    end
+  end
+end
+
+# To run the tests from your command line, you need to start ExUnit first.
+ExUnit.start()
+
+# Now, you could run "mix test" to run the tests.
+
+# Alternatively, you can execute tests from an IEx session like this:
+ExUnit.run()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Running ExUnit with seed: 576563, max_cases: 20
+
+.
+
+  1) test div/2 see how a test fail looks like (RunElixir.ExampleTest)
+     Library/Application Support/livebook/autosaved/2024_09_27/10_48_dvyj/untitled_notebook.livemd#cell:hpn2l3c23pevgamx:55
+     Assertion with == failed
+     code:  assert Example.div(2, 4) == 1.0
+     left:  0.5
+     right: 1.0
+     stacktrace:
+       Library/Application Support/livebook/autosaved/2024_09_27/10_48_dvyj/untitled_notebook.livemd#cell:hpn2l3c23pevgamx:56: (test)
+
+..
+Finished in 0.00 seconds (0.00s async, 0.00s sync)
+4 tests, 1 failure
+```
+
+## Integration Tests with LiveView
+
+You can write powerful unit tests with ExUnit and easily extend them to integration tests using the LiveView test helpers.
+
 If you generated the ToDo app in chapter [Create a Phoenix Project](02-start-coding/create-a-phoenix-project.md), Phoenix generated a complete test setup and some unit tests for you. You can find the unit tests in `test/demo/to_dos_test.exs` and `test/demo_web/live/to_do_live_test.exs` and the test setup in `test/test_helper.exs` and `test/support/(data|conn)_case.ex`.
 
 Let's have a look at the `"saves new to_do"` unit test in `test/demo_web/live/to_do_live_test.exs`:
@@ -85,7 +172,7 @@ defmodule DemoWeb.ToDoLiveTest do
 end
 ```
 
-As you can see, you can write powerful unit tests with ExUnit and easily extend them to integration tests using the LiveView test helpers. The best thing about this setup is that you can easily drop down to the database level and check that a record was persisted correctly. Let's extend the test above to test just that.
+The best thing about running integration tests with LiveView is that you can easily drop down to the database level and check that a record was persisted correctly. Let's extend the test above to test just that.
 
 ```elixir
 test "saves new to_do", %{conn: conn, to_do: to_do} do
