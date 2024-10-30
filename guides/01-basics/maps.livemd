@@ -31,7 +31,7 @@ Map.drop(map, [:hello, 32])
 
 ### Maps with Atom keys
 
-If your map contains only Atom keys, you can replace the arrow `=>` with a semicolon `:`
+If your map contains only Atom keys, you can replace the arrow `=>` with a colon `:`
 
 ```elixir
 map = %{hello: "World", age: 32, height: 190.47}
