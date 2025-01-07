@@ -51,7 +51,7 @@ Enum.reduce([1, 2, 3], 0, fn x, acc -> acc + x end)
 
 # Only keep the elements for which the function evaluates to truthy and filter out the rest.
 Enum.filter([1, 2, 3], fn x -> x == 2 end)
-# => [2]
+# => [2, 3]
 
 # Reject/remove an element if the function evaluates to truthy.
 Enum.reject([1, 2, 3], fn x -> x == 2 end)
