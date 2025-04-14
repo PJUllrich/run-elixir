@@ -17,11 +17,11 @@ asdf plugin add erlang
 
 # Now install erlang
 asdf install erlang latest
-asdf global erlang latest
+asdf set -u erlang latest
 
 # And Elixir
 asdf install elixir latest
-asdf global elixir latest
+asdf set -u elixir latest
 
 # You can check that Elixir is installed with:
 elixir -v
