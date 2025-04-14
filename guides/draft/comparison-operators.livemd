@@ -1,0 +1,35 @@
+
+TODO: Mention `and` + `or` and `&&` + `||` and when to use them.
+
+```elixir
+# The 'and' + 'or' operators only work properly with booleans
+true and false # => false
+false or true  # => true
+
+# 🚨 They throw a BadBooleanError exception for non-boolean values
+nil and false # => BadBooleanError
+nil or false # => BadBooleanError
+
+# ⚠️ Except when the last argument is non-boolean.
+# In these cases, they return the non-boolean value instead.
+true and nil # => nil
+false or :foo # => :foo
+
+# ✅ The safer option is to use '&&' and '||' for everything
+# outside of Ecto queries.
+true && false # => false
+false || true # => true
+
+# ⚠️ Also these operators don't always return 'true' or 'false'
+# But they don't throw an exception for non-boolean values.
+nil && false # => nil
+false || :foo # => :foo
+
+# 🚀 This doesn't matter for Elixir though, because it evaluates
+# any value other than 'false' or 'nil' as "truthy". As long as
+# your operators return a truthy or falsey value, you're safe.
+if nil, do: "true", else: "false" # => "false"
+if :foo, do: "true", else: "false" # => "true"
+
+# ➡️ So, always use '&&' + '||' outside of Ecto queries!
+```

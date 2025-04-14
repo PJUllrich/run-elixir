@@ -27,9 +27,9 @@ defmodule RunElixir.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.34.2", only: :dev, runtime: false},
-      {:publishex, "~> 1.0.1", only: :dev, runtime: false},
-      {:file_system, "~> 1.0", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.37", only: :dev, runtime: false},
+      {:publishex, "~> 1.1.1", only: :dev, runtime: false},
+      {:file_system, "~> 1.1", only: :dev, runtime: false}
     ]
   end
 

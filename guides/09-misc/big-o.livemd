@@ -73,7 +73,7 @@ iex> Keyword.delete([{:a, 1}, {:a, 2}], :a)
 
 - Tuples are better for reading, whereas Lists are better for traversals
 - Avoid using tuples as a collection
-  - (i.e. avoid `Tuple.append/2`, `Tuple.insert_at/3`, or `Tuple.delete_at/2`)
+  - (i.e. avoid `Tuple.insert_at/3`, or `Tuple.delete_at/2`)
 
 ## [(erlang) array](https://www.erlang.org/doc/man/array.html)
 
