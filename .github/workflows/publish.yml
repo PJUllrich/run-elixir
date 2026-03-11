@@ -1,27 +1,28 @@
-name: Publish to Netlify
+name: Publish to GHCR
 on:
   push:
     branches:
       - main
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   publish:
-    name: Publish
+    name: Build and Push
     runs-on: ubuntu-latest
-
-    env:
-      ELIXIR_VERSION: 1.17.2-otp-27
-      ERLANG_VERSION: 27.0.1
-      NODE_VERSION: 20.2.0
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{ env.ELIXIR_VERSION }}
-          otp-version: ${{ env.ERLANG_VERSION }}
+          version-file: .tool-versions
+          version-type: strict
 
-      # Cache Mix Dependencies based on mix.lock
       - name: Retrieve Mix Dependencies Cache
         uses: actions/cache@v4
         id: mix-cache
@@ -29,7 +30,6 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
 
-      # Get Mix Dependencies only if cache was not hit
       - name: Install Mix Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
@@ -37,7 +37,6 @@ jobs:
           mix local.hex --force
           mix deps.get
 
-      # Cache the _build folder
       - name: Retrieve Build Cache
         uses: actions/cache@v4
         id: build-cache
@@ -45,16 +44,25 @@ jobs:
           path: _build
           key: ${{ runner.os }}-build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
 
-      # Compile mix dependencies if the _build folder was not cached
       - name: Compile Mix Dependencies
         if: steps.build-cache.outputs.cache-hit != 'true'
-        run: MIX_ENV=test mix deps.compile
+        run: mix deps.compile
 
       - name: Generate Documentation
         run: mix docs
 
-      - name: Deploy to Netlify
-        run: ./deploy.sh
-        env:
-          NETLIFY_ACCESS_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}

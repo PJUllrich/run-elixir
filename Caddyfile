@@ -1,0 +1,6 @@
+:80 {
+	root * /srv
+	file_server
+	try_files {path} {path}.html
+	header Access-Control-Allow-Origin "https://livebook.dev"
+}
