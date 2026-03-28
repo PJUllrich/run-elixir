@@ -1,6 +1,6 @@
 # Install Dependencies
 
-You can install dependencies from a few sources, like the Elixir package manager [Hex.pm](hex.pm), GitHub, a Git repository, or a local path. You only need to add them to the `deps/0` function in your `mix.exs` file.
+You can install dependencies from a few sources, like the Elixir package manager [Hex.pm](https://hex.pm), GitHub, a Git repository, or a local path. You only need to add them to the `deps/0` function in your `mix.exs` file.
 
 Let's add the HTTP library, [Req](https://hex.pm/packages/req):
 
